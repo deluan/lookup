@@ -6,6 +6,7 @@ import "fmt"
 type SArray interface {
 	Get(x, y int) float64
 	Set(x, y int, value float64) error
+	Array() []float64
 	Width() int
 	Height() int
 	Size() int
@@ -78,6 +79,10 @@ func (s *basicSArray) Set(x, y int, value float64) error {
 
 	s.array[y*s.cx+x] = value
 	return nil
+}
+
+func (s *basicSArray) Array() []float64 {
+	return s.array
 }
 
 func stepThrough(a SArray) {

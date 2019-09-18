@@ -88,13 +88,16 @@ func numerator(img *common.ImageBinaryChannel, template *common.ImageBinaryChann
 	return multiplyAndSum(img.ZeroMeanImage(), xx, yy, template.ZeroMeanImage())
 }
 
-func multiplyAndSum(img common.SArray, xx, yy int, template common.SArray) float64 {
-	cx := template.Width()
-	cy := template.Height()
+func multiplyAndSum(img common.SArray, offsetX, offsetY int, template common.SArray) float64 {
+	templateWidth := template.Width()
+	templateHeight := template.Height()
+	imgWidth := img.Width()
+	imgArray := img.Array()
+	templateArray := template.Array()
 	var sum float64
-	for x := 0; x < cx; x++ {
-		for y := 0; y < cy; y++ {
-			value := img.Get(xx+x, yy+y) * template.Get(x, y)
+	for x := 0; x < templateWidth; x++ {
+		for y := 0; y < templateHeight; y++ {
+			value := imgArray[(offsetY+y)*imgWidth+offsetX+x] * templateArray[y*templateWidth+x]
 			sum += value
 		}
 	}
