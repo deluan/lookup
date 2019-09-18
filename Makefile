@@ -5,5 +5,8 @@ watch:
 test:
 	go test ./...
 
+bench:
+	go test -bench=. -run=XXX
+
 doc:
 	godoc -http=":6060"

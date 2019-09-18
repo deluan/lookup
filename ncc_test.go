@@ -1,6 +1,7 @@
 package lookup
 
 import (
+	"github.com/deluan/lookup/common"
 	"image"
 	_ "image/png"
 	"os"
@@ -23,6 +24,32 @@ func TestLookupAll(t *testing.T) {
 			})
 		})
 	})
+}
+
+var (
+	benchImg      = loadImage("examples/cyclopst1.png")
+	benchTemplate = loadImage("examples/cyclopst3.png")
+)
+
+func BenchmarkLookupAll(b *testing.B) {
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_, _ = LookupAll(benchImg, benchTemplate, 0.9)
+	}
+}
+
+func BenchmarkNumerator(b *testing.B) {
+	b.StopTimer()
+	imgBin := common.NewImageBinaryGrey(benchImg)
+	templateBin := common.NewImageBinaryGrey(benchTemplate)
+	ci := imgBin.Channels()[0]
+	ct := templateBin.Channels()[0]
+	b.StartTimer()
+
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		common.NewImageMultiply(ci.ZeroMeanImage(), 0, 0, ct.ZeroMeanImage())
+	}
 }
 
 func loadImage(path string) image.Image {
