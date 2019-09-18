@@ -1,11 +1,12 @@
 package lookup
 
 import (
-	"github.com/deluan/lookup/common"
 	"image"
 	_ "image/png"
 	"os"
 	"testing"
+
+	"github.com/deluan/lookup/common"
 
 	. "github.com/smartystreets/goconvey/convey"
 )

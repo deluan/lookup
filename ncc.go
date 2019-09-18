@@ -2,9 +2,10 @@ package lookup
 
 import (
 	"fmt"
-	"github.com/deluan/lookup/common"
 	"image"
 	"math"
+
+	"github.com/deluan/lookup/common"
 )
 
 func min(a, b int) int {
