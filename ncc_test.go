@@ -12,8 +12,8 @@ import (
 
 func TestLookupAll(t *testing.T) {
 	Convey("Given an image and a template to look for", t, func() {
-		img := loadImage("examples/cyclopst1.png")
-		template := loadImage("examples/cyclopst3.png")
+		img := loadImage("cyclopst1.png")
+		template := loadImage("cyclopst3.png")
 
 		Convey("When searching in RGB", func() {
 			pp, _ := LookupAllGrey(img, template, 0.9)
@@ -40,8 +40,8 @@ func TestMultiplyAndSum(t *testing.T) {
 }
 
 var (
-	benchImg         = loadImage("examples/cyclopst1.png")
-	benchTemplate    = loadImage("examples/cyclopst3.png")
+	benchImg         = loadImage("cyclopst1.png")
+	benchTemplate    = loadImage("cyclopst3.png")
 	benchImgBin      = common.NewImageBinaryGrey(benchImg)
 	benchTemplateBin = common.NewImageBinaryGrey(benchTemplate)
 )
@@ -68,7 +68,7 @@ func BenchmarkMultiplyAndSum(b *testing.B) {
 }
 
 func loadImage(path string) image.Image {
-	imageFile, _ := os.Open(path)
+	imageFile, _ := os.Open("testdata/" + path)
 	defer imageFile.Close()
 	img, _, _ := image.Decode(imageFile)
 	return img
