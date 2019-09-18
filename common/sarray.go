@@ -68,11 +68,7 @@ func (s *basicSArray) Get(x, y int) float64 {
 		return 0
 	}
 
-	return s.array[s.pos(x, y)]
-}
-
-func (s *basicSArray) pos(x int, y int) int {
-	return y*s.cx + x
+	return s.array[y*s.cx+x]
 }
 
 func (s *basicSArray) Set(x, y int, value float64) error {

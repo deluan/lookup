@@ -58,5 +58,5 @@ type testSArray struct {
 }
 
 func (ta *testSArray) Step(x, y int) {
-	ta.called[ta.pos(x, y)] += 1
+	ta.called[y*ta.cx+x] += 1
 }

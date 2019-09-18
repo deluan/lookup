@@ -14,11 +14,16 @@ func min(a, b int) int {
 	return b
 }
 
-func LookupAll(img image.Image, template image.Image, m float64) ([]image.Point, error) {
+type GPoint struct {
+	X, Y int
+	G    float64
+}
+
+func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
 	imgBin := common.NewImageBinaryGrey(img)
 	templateBin := common.NewImageBinaryGrey(template)
 
-	var list []image.Point
+	var list []GPoint
 	x1, y1 := 0, 0
 	max := img.Bounds().Max
 	x2, y2 := max.X-1, max.Y-1
@@ -38,7 +43,7 @@ func LookupAll(img image.Image, template image.Image, m float64) ([]image.Point,
 	return list, nil
 }
 
-func lookup(img common.ImageBinary, template common.ImageBinary, x int, y int, m float64) (*image.Point, error) {
+func lookup(img common.ImageBinary, template common.ImageBinary, x int, y int, m float64) (*GPoint, error) {
 	ci := img.Channels()
 	ct := template.Channels()
 
@@ -57,7 +62,7 @@ func lookup(img common.ImageBinary, template common.ImageBinary, x int, y int, m
 		}
 		g = math.Min(g, gg)
 	}
-	return &image.Point{X: x, Y: y}, nil
+	return &GPoint{X: x, Y: y, G: g}, nil
 }
 
 func gamma(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {

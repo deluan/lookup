@@ -21,6 +21,7 @@ func TestLookupAll(t *testing.T) {
 				So(pp, ShouldHaveLength, 1)
 				So(pp[0].X, ShouldEqual, 21)
 				So(pp[0].Y, ShouldEqual, 7)
+				So(pp[0].G, ShouldBeGreaterThan, 0.9)
 			})
 		})
 	})
