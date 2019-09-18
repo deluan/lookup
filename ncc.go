@@ -19,18 +19,21 @@ type GPoint struct {
 	G    float64
 }
 
-func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
+func LookupAllGrey(img image.Image, template image.Image, m float64) ([]GPoint, error) {
 	imgBin := common.NewImageBinaryGrey(img)
 	templateBin := common.NewImageBinaryGrey(template)
+	return lookupAll(imgBin, templateBin, m)
+}
 
+func lookupAll(imgBin common.ImageBinary, templateBin common.ImageBinary, m float64) ([]GPoint, error) {
 	var list []GPoint
 	x1, y1 := 0, 0
-	max := img.Bounds().Max
-	x2, y2 := max.X-1, max.Y-1
+	x2, y2 := imgBin.Width()-1, imgBin.Height()-1
 
-	templateMax := template.Bounds().Max
-	for x := x1; x <= x2-templateMax.X+1; x++ {
-		for y := y1; y <= y2-templateMax.Y+1; y++ {
+	templateWidth := templateBin.Width()
+	templateHeight := templateBin.Height()
+	for x := x1; x <= x2-templateWidth+1; x++ {
+		for y := y1; y <= y2-templateHeight+1; y++ {
 			g, err := lookup(imgBin, templateBin, x, y, m)
 			if err != nil {
 				return nil, err
@@ -82,6 +85,18 @@ func denominator(img *common.ImageBinaryChannel, template *common.ImageBinaryCha
 }
 
 func numerator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {
-	m := common.NewImageMultiply(img.ZeroMeanImage(), xx, yy, template.ZeroMeanImage())
-	return m.Sum()
+	return multiplyAndSum(img.ZeroMeanImage(), xx, yy, template.ZeroMeanImage())
+}
+
+func multiplyAndSum(img common.SArray, xx, yy int, template common.SArray) float64 {
+	cx := template.Width()
+	cy := template.Height()
+	var sum float64
+	for x := 0; x < cx; x++ {
+		for y := 0; y < cy; y++ {
+			value := img.Get(xx+x, yy+y) * template.Get(x, y)
+			sum += value
+		}
+	}
+	return sum
 }

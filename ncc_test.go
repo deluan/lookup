@@ -16,7 +16,7 @@ func TestLookupAll(t *testing.T) {
 		template := loadImage("examples/cyclopst3.png")
 
 		Convey("When searching in RGB", func() {
-			pp, _ := LookupAll(img, template, 0.9)
+			pp, _ := LookupAllGrey(img, template, 0.9)
 			Convey("It finds the template", func() {
 				So(pp, ShouldHaveLength, 1)
 				So(pp[0].X, ShouldEqual, 21)
@@ -27,19 +27,33 @@ func TestLookupAll(t *testing.T) {
 	})
 }
 
+func TestMultiplyAndSum(t *testing.T) {
+	Convey("Given a two arrays", t, func() {
+		a1, _ := common.NewSArray(2, 2, []float64{1, 2, 3, 4})
+		a2, _ := common.NewSArray(2, 2, []float64{1, 2, 3, 4})
+
+		Convey("It sums all resulting pixels", func() {
+			sum := multiplyAndSum(a1, 0, 0, a2)
+			So(sum, ShouldEqual, 1+4+9+16)
+		})
+	})
+}
+
 var (
-	benchImg      = loadImage("examples/cyclopst1.png")
-	benchTemplate = loadImage("examples/cyclopst3.png")
+	benchImg         = loadImage("examples/cyclopst1.png")
+	benchTemplate    = loadImage("examples/cyclopst3.png")
+	benchImgBin      = common.NewImageBinaryGrey(benchImg)
+	benchTemplateBin = common.NewImageBinaryGrey(benchTemplate)
 )
 
 func BenchmarkLookupAll(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		_, _ = LookupAll(benchImg, benchTemplate, 0.9)
+		_, _ = lookupAll(benchImgBin, benchTemplateBin, 0.9)
 	}
 }
 
-func BenchmarkNumerator(b *testing.B) {
+func BenchmarkMultiplyAndSum(b *testing.B) {
 	b.StopTimer()
 	imgBin := common.NewImageBinaryGrey(benchImg)
 	templateBin := common.NewImageBinaryGrey(benchTemplate)
@@ -49,7 +63,7 @@ func BenchmarkNumerator(b *testing.B) {
 
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		common.NewImageMultiply(ci.ZeroMeanImage(), 0, 0, ct.ZeroMeanImage())
+		multiplyAndSum(ci.ZeroMeanImage(), 0, 0, ct.ZeroMeanImage())
 	}
 }
 
