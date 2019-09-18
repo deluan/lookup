@@ -1,0 +1,5 @@
+- Copy: https://stackoverflow.com/a/33198436
+- Hash: https://github.com/corona10/goimagehash
+- Gaussian: https://github.com/esimov/stackblur-go
+- Image Processing: https://github.com/disintegration/imaging
+- Image Processing: https://github.com/anthonynsimon/bild
