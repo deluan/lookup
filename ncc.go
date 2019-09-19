@@ -20,7 +20,7 @@ type GPoint struct {
 	G    float64
 }
 
-func LookupAllGrey(img image.Image, template image.Image, m float64) ([]GPoint, error) {
+func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
 	imgBin := common.NewImageBinary(img)
 	templateBin := common.NewImageBinary(template)
 	return lookupAll(imgBin, templateBin, m)

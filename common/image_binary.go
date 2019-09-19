@@ -76,14 +76,44 @@ type ImageBinary struct {
 }
 
 func NewImageBinary(img image.Image) *ImageBinary {
-	// TODO if RGB then create one channel per color...
 	max := img.Bounds().Max
 	ibg := &ImageBinary{
 		Width:  max.X,
 		Height: max.Y,
 		Size:   max.X * max.Y,
 	}
-	c := NewImageBinaryChannel(img, Gray)
-	ibg.Channels = append(ibg.Channels, c)
+	if _, ok := img.(*image.Gray); ok {
+		c := NewImageBinaryChannel(img, Gray)
+		ibg.Channels = append(ibg.Channels, c)
+	} else {
+		ibg.Channels = ExtractRGBChannels(img, Red, Green, Blue)
+	}
 	return ibg
+}
+
+func ExtractRGBChannels(imgSrc image.Image, colorChannelTypes ...ChannelType) []*ImageBinaryChannel {
+	channels := make([]*ImageBinaryChannel, 3)
+	max := imgSrc.Bounds().Max
+	w, h := max.X, max.Y
+	for i, channelType := range colorChannelTypes {
+		grayScale := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
+		for x := 0; x < w; x++ {
+			for y := 0; y < h; y++ {
+				colorPixel := imgSrc.At(x, y).(color.NRGBA)
+				var c uint8
+				switch channelType {
+				case Red:
+					c = colorPixel.R
+				case Green:
+					c = colorPixel.G
+				case Blue:
+					c = colorPixel.B
+				}
+				grayPixel := color.Gray{Y: c}
+				grayScale.Set(x, y, grayPixel)
+			}
+		}
+		channels[i] = NewImageBinaryChannel(grayScale, channelType)
+	}
+	return channels
 }

@@ -1,6 +1,7 @@
 package lookup
 
 import (
+	"fmt"
 	"image"
 	_ "image/png"
 	"os"
@@ -12,20 +13,37 @@ import (
 )
 
 func TestLookupAll(t *testing.T) {
-	Convey("Given an image and a template to look for", t, func() {
-		img := loadImage("cyclopst1.png")
-		template := loadImage("cyclopst3.png")
+	Convey("Given an Color image and a template to look for", t, func() {
+		img := loadImageColor("cyclopst1.png")
+		template := loadImageColor("cyclopst3.png")
 
-		Convey("When searching in RGB", func() {
-			pp, _ := LookupAllGrey(img, template, 0.9)
+		Convey("When searching", func() {
+			pp, _ := LookupAll(img, template, 0.9)
 			Convey("It finds the template", func() {
 				So(pp, ShouldHaveLength, 1)
 				So(pp[0].X, ShouldEqual, 21)
 				So(pp[0].Y, ShouldEqual, 7)
 				So(pp[0].G, ShouldBeGreaterThan, 0.9)
+				fmt.Printf("Color: %v", pp[0])
 			})
 		})
 	})
+	Convey("Given an Gray Scale image and a template to look for", t, func() {
+		img := loadImageGray("cyclopst1.png")
+		template := loadImageGray("cyclopst3.png")
+
+		Convey("When searching", func() {
+			pp, _ := LookupAll(img, template, 0.9)
+			Convey("It finds the template", func() {
+				So(pp, ShouldHaveLength, 1)
+				So(pp[0].X, ShouldEqual, 21)
+				So(pp[0].Y, ShouldEqual, 7)
+				So(pp[0].G, ShouldBeGreaterThan, 0.9)
+				fmt.Printf("Gray: %v", pp[0])
+			})
+		})
+	})
+
 }
 
 func TestMultiplyAndSum(t *testing.T) {
@@ -45,13 +63,13 @@ func TestMultiplyAndSum(t *testing.T) {
 }
 
 var (
-	benchImg         = loadImage("cyclopst1.png")
-	benchTemplate    = loadImage("cyclopst3.png")
+	benchImg         = loadImageColor("cyclopst1.png")
+	benchTemplate    = loadImageColor("cyclopst3.png")
 	benchImgBin      = common.NewImageBinary(benchImg)
 	benchTemplateBin = common.NewImageBinary(benchTemplate)
 )
 
-func BenchmarkLookupAll(b *testing.B) {
+func BenchmarkLookupAllColor(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		_, _ = lookupAll(benchImgBin, benchTemplateBin, 0.9)
@@ -59,12 +77,8 @@ func BenchmarkLookupAll(b *testing.B) {
 }
 
 func BenchmarkMultiplyAndSum(b *testing.B) {
-	b.StopTimer()
-	imgBin := common.NewImageBinary(benchImg)
-	templateBin := common.NewImageBinary(benchTemplate)
-	ci := imgBin.Channels[0]
-	ct := templateBin.Channels[0]
-	b.StartTimer()
+	ci := benchImgBin.Channels[0]
+	ct := benchTemplateBin.Channels[0]
 
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
@@ -72,10 +86,15 @@ func BenchmarkMultiplyAndSum(b *testing.B) {
 	}
 }
 
-func loadImage(path string) image.Image {
+func loadImageColor(path string) image.Image {
 	imageFile, _ := os.Open("testdata/" + path)
 	defer imageFile.Close()
 	img, _, _ := image.Decode(imageFile)
+	return img
+}
+
+func loadImageGray(path string) image.Image {
+	img := loadImageColor(path)
 	return utils.ConvertToAverageGrayScale(img)
 }
 

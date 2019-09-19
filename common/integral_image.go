@@ -13,11 +13,10 @@ type IntegralImage struct {
 	// Sum Table
 	Pix []float64
 	// Image Energy. Squared Image Function f^2(x,y).
-	Pix2        []float64
-	Mean        float64
-	width       int
-	height      int
-	numChannels int
+	Pix2   []float64
+	Mean   float64
+	width  int
+	height int
 }
 
 func CreateIntegralImage(original image.Image) *IntegralImage {
@@ -30,7 +29,7 @@ func (i *IntegralImage) get(pix []float64, x, y int) float64 {
 	if x < 0 || y < 0 {
 		return 0
 	}
-	idx := (y * i.width) + (x * i.numChannels)
+	idx := (y * i.width) + x
 	return pix[idx]
 }
 
@@ -56,26 +55,16 @@ func (i *IntegralImage) dev2n() float64 {
 	return i.dev2nRect(0, 0, i.width-1, i.height-1)
 }
 
-func getNumChannels(img image.Image) int {
-	switch img.(type) {
-	case *image.Gray:
-		return 1
-	}
-	return 1
-}
-
 func createIntegral(original image.Image) *IntegralImage {
 	max := original.Bounds().Max
 	cx := max.X
 	cy := max.Y
-	numChannels := getNumChannels(original)
 	integral := &IntegralImage{
-		width:       cx,
-		height:      cy,
-		numChannels: numChannels,
+		width:  cx,
+		height: cy,
 	}
-	pix := make([]float64, cx*cy*numChannels)
-	pix2 := make([]float64, cx*cy*numChannels)
+	pix := make([]float64, cx*cy)
+	pix2 := make([]float64, cx*cy)
 	offset := 0
 	originalGray := original.(*image.Gray).Pix
 	for y := 0; y < cy; y++ {
@@ -90,7 +79,7 @@ func createIntegral(original image.Image) *IntegralImage {
 			d2 := integral.get(pix2, x-1, y-1)
 			pix[offset] = a + b + c - d
 			pix2[offset] = a2 + b2 + c2 - d2
-			offset += numChannels
+			offset++
 		}
 	}
 	integral.Pix = pix

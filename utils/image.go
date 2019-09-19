@@ -7,8 +7,8 @@ import (
 
 // Why this does not work? https://stackoverflow.com/a/42518487
 func ConvertToAverageGrayScale(imgSrc image.Image) image.Image {
-	bounds := imgSrc.Bounds()
-	w, h := bounds.Max.X, bounds.Max.Y
+	max := imgSrc.Bounds().Max
+	w, h := max.X, max.Y
 	grayScale := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
