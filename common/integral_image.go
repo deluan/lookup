@@ -19,7 +19,7 @@ type IntegralImage struct {
 	height int
 }
 
-func CreateIntegralImage(original image.Image) *IntegralImage {
+func NewIntegralImage(original image.Image) *IntegralImage {
 	integral := createIntegral(original)
 	integral.Mean = integral.sigma(integral.Pix, 0, 0, integral.width-1, integral.height-1) / float64(len(integral.Pix))
 	return integral

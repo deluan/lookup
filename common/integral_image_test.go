@@ -23,7 +23,7 @@ func TestIntegralImage(t *testing.T) {
 		}
 
 		Convey("When I calculate the Integral Image of it", func() {
-			integral := CreateIntegralImage(grayImage)
+			integral := NewIntegralImage(grayImage)
 
 			Convey("Then its sigma is the sum of all pixels", func() {
 				So(integral.sigma(integral.Pix, 0, 0, 3, 3), ShouldEqual, sum)
@@ -36,7 +36,7 @@ func TestIntegralImage(t *testing.T) {
 	})
 }
 
-func BenchmarkCreateIntegralImage(b *testing.B) {
+func BenchmarkNewIntegralImage(b *testing.B) {
 	b.StopTimer()
 	grayImage := newGrayImage(4, 4, []uint8{
 		5, 2, 5, 2,
@@ -47,7 +47,7 @@ func BenchmarkCreateIntegralImage(b *testing.B) {
 	b.StartTimer()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		CreateIntegralImage(grayImage)
+		NewIntegralImage(grayImage)
 	}
 }
 

@@ -8,18 +8,20 @@ import (
 	"github.com/deluan/lookup/common"
 )
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 type GPoint struct {
 	X, Y int
 	G    float64
 }
 
+//  http://www.fmwconcepts.com/imagemagick/similar/index.php
+//
+//  1) mean && stddev
+//  2) image1(x,y) - mean1 && image2(x,y) - mean2
+//  3) [3] = (image1(x,y) - mean)(x,y)//  (image2(x,y) - mean)(x,y)
+//  4) [4] = mean([3])
+//  5) [4] / (stddev1//  stddev2)
+//
+//  Normalized Cross Correlation algorithm
 func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
 	imgBin := common.NewImageBinary(img)
 	templateBin := common.NewImageBinary(template)
@@ -45,6 +47,13 @@ func lookupAll(imgBin *common.ImageBinary, templateBin *common.ImageBinary, m fl
 		}
 	}
 	return list, nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
 
 func lookup(img *common.ImageBinary, template *common.ImageBinary, x int, y int, m float64) (*GPoint, error) {

@@ -5,7 +5,9 @@ import (
 	"image/color"
 )
 
-// Why this does not work? https://stackoverflow.com/a/42518487
+// Converts a any image.Image to image.Gray, using a simple average of the color channels.
+// Does not compute luminosity
+// Ref: https://stackoverflow.com/a/42518487
 func ConvertToAverageGrayScale(imgSrc image.Image) image.Image {
 	max := imgSrc.Bounds().Max
 	w, h := max.X, max.Y
