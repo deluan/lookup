@@ -40,12 +40,14 @@ func NewImageBinaryChannel(img image.Image, channelType ChannelType) *ImageBinar
 	return ibc
 }
 
+// Standard deviation, no sqrt and no mean
 func (c *ImageBinaryChannel) Dev2nRect(x1, y1, x2, y2 int) float64 {
 	return c.integralImage.dev2nRect(x1, y1, x2, y2)
 }
 
+// Same as Dev2nRect, for the whole image
 func (c *ImageBinaryChannel) Dev2n() float64 {
-	return c.integralImage.dev2n()
+	return c.integralImage.dev2nRect(0, 0, c.Width-1, c.Height-1)
 }
 
 // Container for ImageBinaryChannels (one for each channel)

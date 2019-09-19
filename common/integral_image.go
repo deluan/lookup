@@ -41,18 +41,12 @@ func (i *IntegralImage) sigma(pixArray []float64, x1, y1, x2, y2 int) float64 {
 	return a + d - b - c
 }
 
-// Standard deviation no sqrt and no mean
 func (i *IntegralImage) dev2nRect(x1, y1, x2, y2 int) float64 {
 	sum := i.sigma(i.Pix, x1, y1, x2, y2)
 	size := (x2 - x1 + 1) * (y2 - y1 + 1)
 	sum2 := i.sigma(i.Pix2, x1, y1, x2, y2)
 	result := sum2 - (sum*sum)/float64(size)
 	return result
-}
-
-// Same as dev2nRect, for the whole image
-func (i *IntegralImage) dev2n() float64 {
-	return i.dev2nRect(0, 0, i.width-1, i.height-1)
 }
 
 func createIntegral(original image.Image) *IntegralImage {
