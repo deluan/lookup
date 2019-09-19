@@ -1,96 +1,99 @@
 package common
 
-import "math"
+import (
+	"image"
+)
 
 //
-// Sum Table. Integral sum.
+// Summed-area table
 //
 // See http://en.wikipedia.org/wiki/Summed_area_table
 //
 type IntegralImage struct {
-	basicSArray
+	// Sum Table
+	Pix []float64
+	// Image Energy. Squared Image Function f^2(x,y).
+	Pix2        []float64
+	Mean        float64
+	width       int
+	height      int
+	numChannels int
 }
 
-func NewIntegralImageFromBase(base SArray) *IntegralImage {
-	a := &IntegralImage{}
-	a.initBase(base)
-	stepThrough(a)
-	return a
+func CreateIntegralImage(original image.Image) *IntegralImage {
+	integral := createIntegral(original)
+	integral.Mean = integral.sigma(integral.Pix, 0, 0, integral.width-1, integral.height-1) / float64(len(integral.Pix))
+	return integral
 }
 
-func (i *IntegralImage) Step(x, y int) {
-	_ = i.Set(x, y, i.base.Get(x, y)+i.Get(x-1, y)+i.Get(x, y-1)-i.Get(x-1, y-1))
+func (i *IntegralImage) get(pix []float64, x, y int) float64 {
+	if x < 0 || y < 0 {
+		return 0
+	}
+	idx := (y * i.width) + (x * i.numChannels)
+	return pix[idx]
 }
 
-func (i *IntegralImage) SigmaRect(x1, y1, x2, y2 int) float64 {
-	a := i.Get(x1-1, y1-1)
-	b := i.Get(x2, y1-1)
-	c := i.Get(x1-1, y2)
-	d := i.Get(x2, y2)
+func (i *IntegralImage) sigma(pixArray []float64, x1, y1, x2, y2 int) float64 {
+	a := i.get(pixArray, x1-1, y1-1)
+	b := i.get(pixArray, x2, y1-1)
+	c := i.get(pixArray, x1-1, y2)
+	d := i.get(pixArray, x2, y2)
 	return a + d - b - c
 }
 
-func (i *IntegralImage) Sigma() float64 {
-	return i.SigmaRect(0, 0, i.cx-1, i.cy-1)
-}
-
-func (i *IntegralImage) Mean() float64 {
-	return i.Sigma() / float64(i.Size())
-}
-
-//
-// Image Energy. Squared Image Function f^2(x,y).
-//
-// See http://en.wikipedia.org/wiki/Summed_area_table
-//
-type IntegralImage2 struct {
-	IntegralImage
-}
-
-func NewIntegralImage2FromBase(base SArray) *IntegralImage2 {
-	a := &IntegralImage2{}
-	a.initBase(base)
-	stepThrough(a)
-
-	return a
-}
-
-func (i2 *IntegralImage2) Step(x, y int) {
-	_ = i2.Set(x, y, math.Pow(i2.base.Get(x, y), 2)+i2.Get(x-1, y)+i2.Get(x, y-1)-i2.Get(x-1, y-1))
-}
-
-func pow(n float64) float64 {
-	return n * n
-}
-
-func (i2 *IntegralImage2) dev2nRect(i *IntegralImage, x1, y1, x2, y2 int) float64 {
-	sum := i.SigmaRect(x1, y1, x2, y2)
+// Standard deviation no sqrt and no mean
+func (i *IntegralImage) dev2nRect(x1, y1, x2, y2 int) float64 {
+	sum := i.sigma(i.Pix, x1, y1, x2, y2)
 	size := (x2 - x1 + 1) * (y2 - y1 + 1)
-	sum2 := i2.SigmaRect(x1, y1, x2, y2)
-	result := sum2 - pow(sum)/float64(size)
+	sum2 := i.sigma(i.Pix2, x1, y1, x2, y2)
+	result := sum2 - (sum*sum)/float64(size)
 	return result
 }
 
-func (i2 *IntegralImage2) dev2Rect(i *IntegralImage, x1, y1, x2, y2 int) float64 {
-	size := (x2 - x1 + 1) * (y2 - y1 + 1)
-	return i2.dev2nRect(i, x1, y1, x2, y2) / float64(size-1)
+// Same as dev2nRect, for the whole image
+func (i *IntegralImage) dev2n() float64 {
+	return i.dev2nRect(0, 0, i.width-1, i.height-1)
 }
 
-func (i2 *IntegralImage2) devRect(i *IntegralImage, x1, y1, x2, y2 int) float64 {
-	return math.Sqrt(i2.dev2Rect(i, x1, y1, x2, y2))
+func getNumChannels(img image.Image) int {
+	switch img.(type) {
+	case *image.Gray:
+		return 1
+	}
+	return 1
 }
 
-// Standard deviation no sqrt and no mean
-func (i2 *IntegralImage2) dev2n(i *IntegralImage) float64 {
-	return i2.dev2nRect(i, 0, 0, i2.cx-1, i2.cy-1)
-}
-
-// Standard deviation no sqrt
-func (i2 *IntegralImage2) dev2(i *IntegralImage) float64 {
-	return i2.dev2Rect(i, 0, 0, i2.cx-1, i2.cy-1)
-}
-
-// Standard deviation
-func (i2 *IntegralImage2) dev(i *IntegralImage) float64 {
-	return i2.devRect(i, 0, 0, i2.cx-1, i2.cy-1)
+func createIntegral(original image.Image) *IntegralImage {
+	max := original.Bounds().Max
+	cx := max.X
+	cy := max.Y
+	numChannels := getNumChannels(original)
+	integral := &IntegralImage{
+		width:       cx,
+		height:      cy,
+		numChannels: numChannels,
+	}
+	pix := make([]float64, cx*cy*numChannels)
+	pix2 := make([]float64, cx*cy*numChannels)
+	offset := 0
+	originalGray := original.(*image.Gray).Pix
+	for y := 0; y < cy; y++ {
+		for x := 0; x < cx; x++ {
+			a := float64(originalGray[offset])
+			b := integral.get(pix, x-1, y)
+			c := integral.get(pix, x, y-1)
+			d := integral.get(pix, x-1, y-1)
+			a2 := a * a
+			b2 := integral.get(pix2, x-1, y)
+			c2 := integral.get(pix2, x, y-1)
+			d2 := integral.get(pix2, x-1, y-1)
+			pix[offset] = a + b + c - d
+			pix2[offset] = a2 + b2 + c2 - d2
+			offset += numChannels
+		}
+	}
+	integral.Pix = pix
+	integral.Pix2 = pix2
+	return integral
 }

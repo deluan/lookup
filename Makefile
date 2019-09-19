@@ -9,4 +9,4 @@ bench:
 	go test -bench=. -run=XXX
 
 doc:
-	godoc -http=":6060"
+	godoc -http=":6060" -goroot=$$GOPATH

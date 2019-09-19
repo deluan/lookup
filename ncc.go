@@ -21,18 +21,18 @@ type GPoint struct {
 }
 
 func LookupAllGrey(img image.Image, template image.Image, m float64) ([]GPoint, error) {
-	imgBin := common.NewImageBinaryGrey(img)
-	templateBin := common.NewImageBinaryGrey(template)
+	imgBin := common.NewImageBinary(img)
+	templateBin := common.NewImageBinary(template)
 	return lookupAll(imgBin, templateBin, m)
 }
 
-func lookupAll(imgBin common.ImageBinary, templateBin common.ImageBinary, m float64) ([]GPoint, error) {
+func lookupAll(imgBin *common.ImageBinary, templateBin *common.ImageBinary, m float64) ([]GPoint, error) {
 	var list []GPoint
 	x1, y1 := 0, 0
-	x2, y2 := imgBin.Width()-1, imgBin.Height()-1
+	x2, y2 := imgBin.Width-1, imgBin.Height-1
 
-	templateWidth := templateBin.Width()
-	templateHeight := templateBin.Height()
+	templateWidth := templateBin.Width
+	templateHeight := templateBin.Height
 	for x := x1; x <= x2-templateWidth+1; x++ {
 		for y := y1; y <= y2-templateHeight+1; y++ {
 			g, err := lookup(imgBin, templateBin, x, y, m)
@@ -47,9 +47,9 @@ func lookupAll(imgBin common.ImageBinary, templateBin common.ImageBinary, m floa
 	return list, nil
 }
 
-func lookup(img common.ImageBinary, template common.ImageBinary, x int, y int, m float64) (*GPoint, error) {
-	ci := img.Channels()
-	ct := template.Channels()
+func lookup(img *common.ImageBinary, template *common.ImageBinary, x int, y int, m float64) (*GPoint, error) {
+	ci := img.Channels
+	ct := template.Channels
 
 	ii := min(len(ci), len(ct))
 	g := math.MaxFloat64
@@ -80,21 +80,17 @@ func gamma(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, 
 }
 
 func denominator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {
-	di := img.Dev2nRect(xx, yy, xx+template.Width()-1, yy+template.Height()-1)
+	di := img.Dev2nRect(xx, yy, xx+template.Width-1, yy+template.Height-1)
 	dt := template.Dev2n()
 	return math.Sqrt(di * dt)
 }
 
-func numerator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {
-	return multiplyAndSum(img.ZeroMeanImage(), xx, yy, template.ZeroMeanImage())
-}
-
-func multiplyAndSum(img common.SArray, offsetX, offsetY int, template common.SArray) float64 {
-	templateWidth := template.Width()
-	templateHeight := template.Height()
-	imgWidth := img.Width()
-	imgArray := img.Array()
-	templateArray := template.Array()
+func numerator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, offsetX int, offsetY int) float64 {
+	imgWidth := img.Width
+	imgArray := img.ZeroMeanImage
+	templateWidth := template.Width
+	templateHeight := template.Height
+	templateArray := template.ZeroMeanImage
 	var sum float64
 	for x := 0; x < templateWidth; x++ {
 		for y := 0; y < templateHeight; y++ {
