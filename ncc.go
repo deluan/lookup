@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"image"
 	"math"
-
-	"github.com/deluan/lookup/common"
 )
 
 type GPoint struct {
@@ -23,12 +21,12 @@ type GPoint struct {
 //
 //  Normalized Cross Correlation algorithm
 func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
-	imgBin := common.NewImageBinary(img)
-	templateBin := common.NewImageBinary(template)
+	imgBin := NewImageBinary(img)
+	templateBin := NewImageBinary(template)
 	return lookupAll(imgBin, templateBin, m)
 }
 
-func lookupAll(imgBin *common.ImageBinary, templateBin *common.ImageBinary, m float64) ([]GPoint, error) {
+func lookupAll(imgBin *ImageBinary, templateBin *ImageBinary, m float64) ([]GPoint, error) {
 	var list []GPoint
 	x1, y1 := 0, 0
 	x2, y2 := imgBin.Width-1, imgBin.Height-1
@@ -56,7 +54,7 @@ func min(a, b int) int {
 	return b
 }
 
-func lookup(img *common.ImageBinary, template *common.ImageBinary, x int, y int, m float64) (*GPoint, error) {
+func lookup(img *ImageBinary, template *ImageBinary, x int, y int, m float64) (*GPoint, error) {
 	ci := img.Channels
 	ct := template.Channels
 
@@ -78,7 +76,7 @@ func lookup(img *common.ImageBinary, template *common.ImageBinary, x int, y int,
 	return &GPoint{X: x, Y: y, G: g}, nil
 }
 
-func gamma(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {
+func gamma(img *ImageBinaryChannel, template *ImageBinaryChannel, xx int, yy int) float64 {
 	d := denominator(img, template, xx, yy)
 	if d == 0 {
 		return -1
@@ -88,13 +86,13 @@ func gamma(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, 
 	return n / d
 }
 
-func denominator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, xx int, yy int) float64 {
+func denominator(img *ImageBinaryChannel, template *ImageBinaryChannel, xx int, yy int) float64 {
 	di := img.Dev2nRect(xx, yy, xx+template.Width-1, yy+template.Height-1)
 	dt := template.Dev2n()
 	return math.Sqrt(di * dt)
 }
 
-func numerator(img *common.ImageBinaryChannel, template *common.ImageBinaryChannel, offsetX int, offsetY int) float64 {
+func numerator(img *ImageBinaryChannel, template *ImageBinaryChannel, offsetX int, offsetY int) float64 {
 	imgWidth := img.Width
 	imgArray := img.ZeroMeanImage
 	templateWidth := template.Width

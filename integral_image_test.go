@@ -1,7 +1,6 @@
-package common
+package lookup
 
 import (
-	"image"
 	_ "image/png"
 	"testing"
 
@@ -49,12 +48,4 @@ func BenchmarkNewIntegralImage(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		NewIntegralImage(grayImage)
 	}
-}
-
-func newGrayImage(width, height int, pixels []uint8) image.Image {
-	grayImage := image.NewGray(image.Rect(0, 0, width, height))
-	for i, v := range pixels {
-		grayImage.Pix[i] = v
-	}
-	return grayImage
 }

@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"image"
 	_ "image/png"
-	"os"
 	"testing"
 
-	"github.com/deluan/lookup/common"
-	"github.com/deluan/lookup/utils"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -46,16 +43,16 @@ func TestLookupAll(t *testing.T) {
 
 }
 
-func TestMultiplyAndSum(t *testing.T) {
+func TestNumerator(t *testing.T) {
 	Convey("Given a two arrays", t, func() {
 		a1 := image.NewGray(image.Rect(0, 0, 2, 2))
 		a2 := image.NewGray(image.Rect(0, 0, 2, 2))
-		b1 := common.NewImageBinaryChannel(a1, common.Gray)
-		b2 := common.NewImageBinaryChannel(a2, common.Gray)
+		b1 := NewImageBinaryChannel(a1, Gray)
+		b2 := NewImageBinaryChannel(a2, Gray)
 		b1.ZeroMeanImage = []float64{1, 2, 3, 4}
 		b2.ZeroMeanImage = []float64{1, 2, 3, 4}
 
-		Convey("It sums all zeroMean pixels", func() {
+		Convey("It sums all zeroMean images pixels", func() {
 			sum := numerator(b1, b2, 0, 0)
 			So(sum, ShouldEqual, 1+4+9+16)
 		})
@@ -65,8 +62,8 @@ func TestMultiplyAndSum(t *testing.T) {
 var (
 	benchImg         = loadImageColor("cyclopst1.png")
 	benchTemplate    = loadImageColor("cyclopst3.png")
-	benchImgBin      = common.NewImageBinary(benchImg)
-	benchTemplateBin = common.NewImageBinary(benchTemplate)
+	benchImgBin      = NewImageBinary(benchImg)
+	benchTemplateBin = NewImageBinary(benchTemplate)
 )
 
 func BenchmarkLookupAllColor(b *testing.B) {
@@ -84,24 +81,4 @@ func BenchmarkMultiplyAndSum(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		numerator(ci, ct, 0, 0)
 	}
-}
-
-func loadImageColor(path string) image.Image {
-	imageFile, _ := os.Open("testdata/" + path)
-	defer imageFile.Close()
-	img, _, _ := image.Decode(imageFile)
-	return img
-}
-
-func loadImageGray(path string) image.Image {
-	img := loadImageColor(path)
-	return utils.ConvertToAverageGrayScale(img)
-}
-
-func newGrayImage(width, height int, pixels []uint8) image.Image {
-	grayImage := image.NewGray(image.Rect(0, 0, width, height))
-	for i, v := range pixels {
-		grayImage.Pix[i] = v
-	}
-	return grayImage
 }
