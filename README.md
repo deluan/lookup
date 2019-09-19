@@ -16,6 +16,7 @@ library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (
 For an example on how to use it see function `TestLookupAll()` in the [test file](ncc_test.go).
 
 ### To Do:
+- ~~Add basic LookUp function~~
 - Implement OCR
 - Implement Scaling
 - Better docs
