@@ -1,5 +1,18 @@
-- Copy: https://stackoverflow.com/a/33198436
-- Hash: https://github.com/corona10/goimagehash
-- Gaussian: https://github.com/esimov/stackblur-go
-- Image Processing: https://github.com/disintegration/imaging
-- Image Processing: https://github.com/anthonynsimon/bild
+# LookUp
+
+**NOTE**: This is alpha quality code, and the API is not finalized yet and will most likely change.
+
+It is a nice, simple and friendly to use library which helps you to lookup objects on a screen. Also 
+it has a OCR functionality. Using Lookup you can do OCR tricks like recognizing any information 
+in your Robot application. Which can be useful for debugging or automating things.
+
+This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) to Go.
+Details on NCC (Normalized cross correlation) used by this library can be found in the original 
+library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
+
+For an example on how to use it see function `TestLookupAll()` in the [test file](ncc_test.go).
+
+### To Do:
+- Implement OCR
+- Implement Scaling
+- Better docs
