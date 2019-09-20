@@ -3,10 +3,13 @@ on: [push]
 jobs:
 
   build:
-    name: Build & Test
-    runs-on: ubuntu-latest
-    steps:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macOS-latest, windows-latest, ubuntu-latest]
 
+    steps:
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
@@ -16,7 +19,7 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
 
-    - name: Get dependencies
+    - name: Download dependencies
       run: |
         go mod download
 
