@@ -1,7 +1,7 @@
 # LookUp
 [![Build Status](https://github.com/deluan/go-lookup/workflows/CI/badge.svg)](https://github.com/deluan/go-lookup/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deluan/go-lookup)](https://goreportcard.com/report/github.com/deluan/go-lookup)
-
+[![Coverage](http://gocover.io/_badge/github.com/deluan/go-lookup)](http://gocover.io/github.com/deluan/go-lookup) 
 
 **NOTE**: This is alpha quality code, and the API is not finalized yet and will most likely change.
 
