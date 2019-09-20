@@ -38,7 +38,7 @@ type fontSymbolLookup struct {
 }
 
 func newFontSymbolLookup(fs *fontSymbol, x, y int, g float64) *fontSymbolLookup {
-	return &fontSymbolLookup{fs, x, y, g, fs.image.Size}
+	return &fontSymbolLookup{fs, x, y, g, fs.image.size}
 }
 
 func (l *fontSymbolLookup) cross(f *fontSymbolLookup) bool {

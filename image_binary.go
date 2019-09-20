@@ -43,7 +43,7 @@ type imageBinary struct {
 	channels []*imageBinaryChannel
 	width    int
 	height   int
-	Size     int
+	size     int
 }
 
 func newImageBinary(img image.Image) *imageBinary {
@@ -51,7 +51,7 @@ func newImageBinary(img image.Image) *imageBinary {
 	ib := &imageBinary{
 		width:  max.X,
 		height: max.Y,
-		Size:   max.X * max.Y,
+		size:   max.X * max.Y,
 	}
 	if _, ok := img.(*image.Gray); ok {
 		c := newImageBinaryChannel(img, gray)

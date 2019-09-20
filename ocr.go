@@ -77,7 +77,7 @@ func (o *OCR) recognize(bi *imageBinary, x1, y1, x2, y2 int) (string, error) {
 func biggerFirst(list []*fontSymbolLookup) func(i, j int) bool {
 	maxSize := 0
 	for _, i := range list {
-		maxSize = max(maxSize, i.fs.image.Size)
+		maxSize = max(maxSize, i.fs.image.size)
 	}
 	maxSize2 := maxSize / 2
 

@@ -8,11 +8,17 @@ import (
 )
 
 func TestFontSymbol(t *testing.T) {
-	Convey("Given an image and a template to look for", t, func() {
+	Convey("When I create a fontSymbol from a image dile", t, func() {
 		img := loadImageGray("font_1/0.png")
 		fs := newFontSymbol("0", img)
-		So(fs.width, ShouldEqual, img.Bounds().Max.X)
-		So(fs.height, ShouldEqual, img.Bounds().Max.Y)
+		Convey("It loads the image as a imageBinary", func() {
+			So(fs.image, ShouldHaveSameTypeAs, &imageBinary{})
+			So(fs.image.width, ShouldEqual, img.Bounds().Max.X)
+			So(fs.image.height, ShouldEqual, img.Bounds().Max.Y)
+			So(fs.symbol, ShouldEqual, "0")
+			So(fs.width, ShouldEqual, img.Bounds().Max.X)
+			So(fs.height, ShouldEqual, img.Bounds().Max.Y)
+		})
 	})
 }
 
