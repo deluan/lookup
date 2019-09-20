@@ -91,23 +91,6 @@ func (l *fontSymbolLookup) String() string {
 	return fmt.Sprintf("'%s'(%d,%d,%d)[%f]", l.fs.symbol, l.x, l.y, l.size, l.g)
 }
 
-func (o *OCR) findAll(symbols []*fontSymbol, bi *imageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {
-	var found []*fontSymbolLookup
-
-	for _, fs := range symbols {
-		pp, err := lookupAll(bi, fs.image, o.threshold)
-		if err != nil {
-			return nil, err
-		}
-		for _, p := range pp {
-			fsl := newFontSymbolLookup(fs, p.X, p.Y, p.G)
-			found = append(found, fsl)
-		}
-	}
-
-	return found, nil
-}
-
 func loadFont(path string) ([]*fontSymbol, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
