@@ -33,7 +33,7 @@ func TestOCR(t *testing.T) {
 			})
 
 			Convey("It updates the totalSymbols", func() {
-				So(ocr.totalSymbols, ShouldEqual, 13)
+				So(ocr.allSymbols, ShouldHaveLength, 13)
 			})
 
 			Convey("And when I pass an image to be recognized", func() {
@@ -55,7 +55,7 @@ func BenchmarkOCR(b *testing.B) {
 	if err := ocr.LoadFont("testdata/font_1"); err != nil {
 		panic(err)
 	}
-	img := loadImageColor("test3.png")
+	img := loadImageGray("test3.png")
 	if _, err := ocr.Recognize(img); err != nil {
 		panic(err)
 	}

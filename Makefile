@@ -1,6 +1,6 @@
 
 watch:
-	goconvey -cover -excludedDirs examples
+	goconvey -cover -excludedDirs testdata
 
 test:
 	go test -v
