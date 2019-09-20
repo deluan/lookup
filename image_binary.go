@@ -111,10 +111,11 @@ func createZeroMeanImage(img image.Image, mean float64) []float64 {
 	cy := img.Bounds().Max.Y
 	zeroMeanImage := make([]float64, cx*cy)
 	offset := 0
+	originalGray := img.(*image.Gray).Pix
 	for y := 0; y < cy; y++ {
 		for x := 0; x < cx; x++ {
-			pix := float64(img.At(x, y).(color.Gray).Y)
-			zeroMeanImage[offset] = pix - mean
+			pixel := float64(originalGray[offset])
+			zeroMeanImage[offset] = pixel - mean
 			offset++
 		}
 	}

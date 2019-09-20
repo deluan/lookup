@@ -20,7 +20,7 @@ type integralImage struct {
 }
 
 func newIntegralImage(original image.Image) *integralImage {
-	integral := createIntegral(original)
+	integral := createIntegralImage(original)
 	integral.mean = integral.sigma(integral.pix, 0, 0, integral.width-1, integral.height-1) / float64(len(integral.pix))
 	return integral
 }
@@ -49,7 +49,7 @@ func (i *integralImage) dev2nRect(x1, y1, x2, y2 int) float64 {
 	return result
 }
 
-func createIntegral(original image.Image) *integralImage {
+func createIntegralImage(original image.Image) *integralImage {
 	max := original.Bounds().Max
 	cx := max.X
 	cy := max.Y
