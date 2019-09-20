@@ -2,6 +2,8 @@
 [![Build Status](https://github.com/deluan/go-lookup/workflows/CI/badge.svg)](https://github.com/deluan/go-lookup/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deluan/go-lookup)](https://goreportcard.com/report/github.com/deluan/go-lookup)
 [![Coverage](http://gocover.io/_badge/github.com/deluan/go-lookup)](http://gocover.io/github.com/deluan/go-lookup) 
+[![Documentation](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat)](https://godoc.org/github.com/deluan/go-lookup) 
+
 
 **NOTE**: This is alpha quality code, and the API is not finalized yet and will most likely change.
 
@@ -13,7 +15,7 @@ This library is a straight port of the [Java LookUp library](https://github.com/
 Details on NCC (Normalized cross correlation) used by this library can be found in the original 
 library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
-While there is no documentation, take a look at the [ncc_test.go](ncc_test.go) and [ocr_test.go](ocr_test.go) files
+While there is no documentation, take a look at the [lookup_test.go](lookup_test.go) and [ocr_test.go](ocr_test.go) files
 for usage examples.
 
 ### To Do:

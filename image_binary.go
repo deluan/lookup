@@ -5,13 +5,13 @@ import (
 	"image/color"
 )
 
-type ChannelType int
+type channelType int
 
 const (
-	Gray ChannelType = iota
-	Red
-	Green
-	Blue
+	gray channelType = iota
+	red
+	green
+	blue
 )
 
 // Minimal Sum-Tables required for any image for NCC or FNCC algorithm.
@@ -19,65 +19,65 @@ const (
 // 1) Integral Image
 // 2) Integral ^ 2 Image (Image Energy)
 // 3) Zero Mean Image (image where each pixel subtracted with image mean value)
-type ImageBinaryChannel struct {
-	ChannelType   ChannelType
-	ZeroMeanImage []float64
-	integralImage *IntegralImage
-	Width         int
-	Height        int
+type imageBinaryChannel struct {
+	channelType   channelType
+	zeroMeanImage []float64
+	integralImage *integralImage
+	width         int
+	height        int
 }
 
 // Standard deviation, no sqrt and no mean
-func (c *ImageBinaryChannel) Dev2nRect(x1, y1, x2, y2 int) float64 {
+func (c *imageBinaryChannel) dev2nRect(x1, y1, x2, y2 int) float64 {
 	return c.integralImage.dev2nRect(x1, y1, x2, y2)
 }
 
 // Same as Dev2nRect, for the whole image
-func (c *ImageBinaryChannel) Dev2n() float64 {
-	return c.integralImage.dev2nRect(0, 0, c.Width-1, c.Height-1)
+func (c *imageBinaryChannel) dev2n() float64 {
+	return c.integralImage.dev2nRect(0, 0, c.width-1, c.height-1)
 }
 
 // Container for ImageBinaryChannels (one for each channel)
 // It auto-detects if the image is RGB or GrayScale
-type ImageBinary struct {
-	Channels []*ImageBinaryChannel
-	Width    int
-	Height   int
+type imageBinary struct {
+	channels []*imageBinaryChannel
+	width    int
+	height   int
 	Size     int
 }
 
-func NewImageBinary(img image.Image) *ImageBinary {
+func newImageBinary(img image.Image) *imageBinary {
 	max := img.Bounds().Max
-	ib := &ImageBinary{
-		Width:  max.X,
-		Height: max.Y,
+	ib := &imageBinary{
+		width:  max.X,
+		height: max.Y,
 		Size:   max.X * max.Y,
 	}
 	if _, ok := img.(*image.Gray); ok {
-		c := newImageBinaryChannel(img, Gray)
-		ib.Channels = append(ib.Channels, c)
+		c := newImageBinaryChannel(img, gray)
+		ib.channels = append(ib.channels, c)
 	} else {
-		ib.Channels = newImageBinaryChannels(img, Red, Green, Blue)
+		ib.channels = newImageBinaryChannels(img, red, green, blue)
 	}
 	return ib
 }
 
-func newImageBinaryChannel(img image.Image, channelType ChannelType) *ImageBinaryChannel {
+func newImageBinaryChannel(img image.Image, channelType channelType) *imageBinaryChannel {
 	max := img.Bounds().Max
-	ibc := &ImageBinaryChannel{
-		ChannelType: channelType,
-		Width:       max.X,
-		Height:      max.Y,
+	ibc := &imageBinaryChannel{
+		channelType: channelType,
+		width:       max.X,
+		height:      max.Y,
 	}
-	ibc.integralImage = NewIntegralImage(img)
-	ibc.ZeroMeanImage = createZeroMeanImage(img, ibc.integralImage.Mean)
+	ibc.integralImage = newIntegralImage(img)
+	ibc.zeroMeanImage = createZeroMeanImage(img, ibc.integralImage.mean)
 
 	return ibc
 }
 
 // Extract one or more color channels from image, and wraps them in ImageBinaryChannels
-func newImageBinaryChannels(imgSrc image.Image, colorChannelTypes ...ChannelType) []*ImageBinaryChannel {
-	channels := make([]*ImageBinaryChannel, 3)
+func newImageBinaryChannels(imgSrc image.Image, colorChannelTypes ...channelType) []*imageBinaryChannel {
+	channels := make([]*imageBinaryChannel, 3)
 	max := imgSrc.Bounds().Max
 	w, h := max.X, max.Y
 	for i, channelType := range colorChannelTypes {
@@ -87,11 +87,11 @@ func newImageBinaryChannels(imgSrc image.Image, colorChannelTypes ...ChannelType
 				colorPixel := imgSrc.At(x, y).(color.NRGBA)
 				var c uint8
 				switch channelType {
-				case Red:
+				case red:
 					c = colorPixel.R
-				case Green:
+				case green:
 					c = colorPixel.G
-				case Blue:
+				case blue:
 					c = colorPixel.B
 				}
 				grayPixel := color.Gray{Y: c}

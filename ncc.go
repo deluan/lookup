@@ -2,7 +2,6 @@ package lookup
 
 import (
 	"fmt"
-	"image"
 	"math"
 )
 
@@ -11,8 +10,6 @@ type GPoint struct {
 	G    float64
 }
 
-//  Search for all occurrences of template inside img, using the NCC algorithm.
-//
 //  Normalized Cross Correlation algorithm
 //  1) mean && stddev
 //  2) image1(x,y) - mean1 && image2(x,y) - mean2
@@ -21,19 +18,14 @@ type GPoint struct {
 //  5) [4] / (stddev1 * stddev2)
 //
 // See http://www.fmwconcepts.com/imagemagick/similar/index.php
-func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
-	imgBin := NewImageBinary(img)
-	templateBin := NewImageBinary(template)
-	return lookupAll(imgBin, templateBin, m)
-}
 
-func lookupAll(imgBin *ImageBinary, templateBin *ImageBinary, m float64) ([]GPoint, error) {
+func lookupAll(imgBin *imageBinary, templateBin *imageBinary, m float64) ([]GPoint, error) {
 	var list []GPoint
 	x1, y1 := 0, 0
-	x2, y2 := imgBin.Width-1, imgBin.Height-1
+	x2, y2 := imgBin.width-1, imgBin.height-1
 
-	templateWidth := templateBin.Width
-	templateHeight := templateBin.Height
+	templateWidth := templateBin.width
+	templateHeight := templateBin.height
 	for x := x1; x <= x2-templateWidth+1; x++ {
 		for y := y1; y <= y2-templateHeight+1; y++ {
 			g, err := lookup(imgBin, templateBin, x, y, m)
@@ -48,9 +40,9 @@ func lookupAll(imgBin *ImageBinary, templateBin *ImageBinary, m float64) ([]GPoi
 	return list, nil
 }
 
-func lookup(img *ImageBinary, template *ImageBinary, x int, y int, m float64) (*GPoint, error) {
-	ci := img.Channels
-	ct := template.Channels
+func lookup(img *imageBinary, template *imageBinary, x int, y int, m float64) (*GPoint, error) {
+	ci := img.channels
+	ct := template.channels
 
 	ii := min(len(ci), len(ct))
 	g := math.MaxFloat64
@@ -58,8 +50,8 @@ func lookup(img *ImageBinary, template *ImageBinary, x int, y int, m float64) (*
 	for i := 0; i < ii; i++ {
 		cct := ct[i]
 		cci := ci[i]
-		if cct.ChannelType != cci.ChannelType {
-			return nil, fmt.Errorf("incompatible channels %d <> %d", cct.ChannelType, cci.ChannelType)
+		if cct.channelType != cci.channelType {
+			return nil, fmt.Errorf("incompatible channels %d <> %d", cct.channelType, cci.channelType)
 		}
 		gg := gamma(cci, cct, x, y)
 		if gg < m {
@@ -70,7 +62,7 @@ func lookup(img *ImageBinary, template *ImageBinary, x int, y int, m float64) (*
 	return &GPoint{X: x, Y: y, G: g}, nil
 }
 
-func gamma(img *ImageBinaryChannel, template *ImageBinaryChannel, xx int, yy int) float64 {
+func gamma(img *imageBinaryChannel, template *imageBinaryChannel, xx int, yy int) float64 {
 	d := denominator(img, template, xx, yy)
 	if d == 0 {
 		return -1
@@ -80,18 +72,18 @@ func gamma(img *ImageBinaryChannel, template *ImageBinaryChannel, xx int, yy int
 	return n / d
 }
 
-func denominator(img *ImageBinaryChannel, template *ImageBinaryChannel, xx int, yy int) float64 {
-	di := img.Dev2nRect(xx, yy, xx+template.Width-1, yy+template.Height-1)
-	dt := template.Dev2n()
+func denominator(img *imageBinaryChannel, template *imageBinaryChannel, xx int, yy int) float64 {
+	di := img.dev2nRect(xx, yy, xx+template.width-1, yy+template.height-1)
+	dt := template.dev2n()
 	return math.Sqrt(di * dt)
 }
 
-func numerator(img *ImageBinaryChannel, template *ImageBinaryChannel, offsetX int, offsetY int) float64 {
-	imgWidth := img.Width
-	imgArray := img.ZeroMeanImage
-	templateWidth := template.Width
-	templateHeight := template.Height
-	templateArray := template.ZeroMeanImage
+func numerator(img *imageBinaryChannel, template *imageBinaryChannel, offsetX int, offsetY int) float64 {
+	imgWidth := img.width
+	imgArray := img.zeroMeanImage
+	templateWidth := template.width
+	templateHeight := template.height
+	templateArray := template.zeroMeanImage
 	var sum float64
 	for x := 0; x < templateWidth; x++ {
 		for y := 0; y < templateHeight; y++ {

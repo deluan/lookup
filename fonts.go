@@ -11,18 +11,18 @@ import (
 
 type fontSymbol struct {
 	symbol string
-	image  *ImageBinary
+	image  *imageBinary
 	width  int
 	height int
 }
 
 func newFontSymbol(symbol string, img image.Image) *fontSymbol {
-	imgBin := NewImageBinary(img)
+	imgBin := newImageBinary(img)
 	fs := &fontSymbol{
 		symbol: symbol,
 		image:  imgBin,
-		width:  imgBin.Width,
-		height: imgBin.Height,
+		width:  imgBin.width,
+		height: imgBin.height,
 	}
 
 	return fs
@@ -91,7 +91,7 @@ func (l *fontSymbolLookup) String() string {
 	return fmt.Sprintf("'%s'(%d,%d,%d)[%f]", l.fs.symbol, l.x, l.y, l.size, l.g)
 }
 
-func (o *OCR) findAll(symbols []*fontSymbol, bi *ImageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {
+func (o *OCR) findAll(symbols []*fontSymbol, bi *imageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {
 	var found []*fontSymbolLookup
 
 	for _, fs := range symbols {

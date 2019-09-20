@@ -9,23 +9,23 @@ import (
 //
 // See http://en.wikipedia.org/wiki/Summed_area_table
 //
-type IntegralImage struct {
+type integralImage struct {
 	// Sum Table
-	Pix []float64
+	pix []float64
 	// Image Energy. Squared Image Function f^2(x,y).
-	Pix2   []float64
-	Mean   float64
+	pix2   []float64
+	mean   float64
 	width  int
 	height int
 }
 
-func NewIntegralImage(original image.Image) *IntegralImage {
+func newIntegralImage(original image.Image) *integralImage {
 	integral := createIntegral(original)
-	integral.Mean = integral.sigma(integral.Pix, 0, 0, integral.width-1, integral.height-1) / float64(len(integral.Pix))
+	integral.mean = integral.sigma(integral.pix, 0, 0, integral.width-1, integral.height-1) / float64(len(integral.pix))
 	return integral
 }
 
-func (i *IntegralImage) get(pix []float64, x, y int) float64 {
+func (i *integralImage) get(pix []float64, x, y int) float64 {
 	if x < 0 || y < 0 {
 		return 0
 	}
@@ -33,7 +33,7 @@ func (i *IntegralImage) get(pix []float64, x, y int) float64 {
 	return pix[idx]
 }
 
-func (i *IntegralImage) sigma(pixArray []float64, x1, y1, x2, y2 int) float64 {
+func (i *integralImage) sigma(pixArray []float64, x1, y1, x2, y2 int) float64 {
 	a := i.get(pixArray, x1-1, y1-1)
 	b := i.get(pixArray, x2, y1-1)
 	c := i.get(pixArray, x1-1, y2)
@@ -41,19 +41,19 @@ func (i *IntegralImage) sigma(pixArray []float64, x1, y1, x2, y2 int) float64 {
 	return a + d - b - c
 }
 
-func (i *IntegralImage) dev2nRect(x1, y1, x2, y2 int) float64 {
-	sum := i.sigma(i.Pix, x1, y1, x2, y2)
+func (i *integralImage) dev2nRect(x1, y1, x2, y2 int) float64 {
+	sum := i.sigma(i.pix, x1, y1, x2, y2)
 	size := (x2 - x1 + 1) * (y2 - y1 + 1)
-	sum2 := i.sigma(i.Pix2, x1, y1, x2, y2)
+	sum2 := i.sigma(i.pix2, x1, y1, x2, y2)
 	result := sum2 - (sum*sum)/float64(size)
 	return result
 }
 
-func createIntegral(original image.Image) *IntegralImage {
+func createIntegral(original image.Image) *integralImage {
 	max := original.Bounds().Max
 	cx := max.X
 	cy := max.Y
-	integral := &IntegralImage{
+	integral := &integralImage{
 		width:  cx,
 		height: cy,
 	}
@@ -76,7 +76,7 @@ func createIntegral(original image.Image) *IntegralImage {
 			offset++
 		}
 	}
-	integral.Pix = pix
-	integral.Pix2 = pix2
+	integral.pix = pix
+	integral.pix2 = pix2
 	return integral
 }

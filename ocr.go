@@ -56,11 +56,11 @@ func (o *OCR) updateAllSymbols() {
 }
 
 func (o *OCR) Recognize(img image.Image) (string, error) {
-	bi := NewImageBinary(ensureGrayScale(img))
-	return o.recognize(bi, 0, 0, bi.Width-1, bi.Height-1)
+	bi := newImageBinary(ensureGrayScale(img))
+	return o.recognize(bi, 0, 0, bi.width-1, bi.height-1)
 }
 
-func (o *OCR) recognize(bi *ImageBinary, x1, y1, x2, y2 int) (string, error) {
+func (o *OCR) recognize(bi *imageBinary, x1, y1, x2, y2 int) (string, error) {
 	found, err := o.findAll(o.allSymbols, bi, x1, y1, x2, y2)
 	if err != nil {
 		return "", err
