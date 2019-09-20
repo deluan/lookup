@@ -77,7 +77,7 @@ func (o *OCR) recognize(bi *ImageBinary, x1, y1, x2, y2 int) (string, error) {
 func biggerFirst(list []*fontSymbolLookup) func(i, j int) bool {
 	maxSize := 0
 	for _, i := range list {
-		maxSize = max(maxSize, i.fontSymbol.image.Size)
+		maxSize = max(maxSize, i.fs.image.Size)
 	}
 	maxSize2 := maxSize / 2
 
@@ -112,7 +112,7 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 	x := all[0].x
 	cx := 0
 	for _, s := range all {
-		maxCX := max(cx, s.fontSymbol.Width)
+		maxCX := max(cx, s.fs.width)
 
 		// if distance between end of previous symbol and beginning of the
 		// current is larger then a char size, then it is a space
@@ -125,9 +125,9 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 			str.WriteString("\n")
 		}
 
-		x = s.x + s.fontSymbol.Width
-		cx = s.fontSymbol.Width
-		str.WriteString(s.fontSymbol.Symbol)
+		x = s.x + s.fs.width
+		cx = s.fs.width
+		str.WriteString(s.fs.symbol)
 	}
 
 	return str.String()

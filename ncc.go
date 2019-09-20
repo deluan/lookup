@@ -11,15 +11,16 @@ type GPoint struct {
 	G    float64
 }
 
-//  http://www.fmwconcepts.com/imagemagick/similar/index.php
-//
-//  1) mean && stddev
-//  2) image1(x,y) - mean1 && image2(x,y) - mean2
-//  3) [3] = (image1(x,y) - mean)(x,y)//  (image2(x,y) - mean)(x,y)
-//  4) [4] = mean([3])
-//  5) [4] / (stddev1//  stddev2)
+//  Search for all occurrences of template inside img, using the NCC algorithm.
 //
 //  Normalized Cross Correlation algorithm
+//  1) mean && stddev
+//  2) image1(x,y) - mean1 && image2(x,y) - mean2
+//  3) [3] = (image1(x,y) - mean)(x,y) * (image2(x,y) - mean)(x,y)
+//  4) [4] = mean([3])
+//  5) [4] / (stddev1 * stddev2)
+//
+// See http://www.fmwconcepts.com/imagemagick/similar/index.php
 func LookupAll(img image.Image, template image.Image, m float64) ([]GPoint, error) {
 	imgBin := NewImageBinary(img)
 	templateBin := NewImageBinary(template)

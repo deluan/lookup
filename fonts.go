@@ -10,31 +10,31 @@ import (
 )
 
 type fontSymbol struct {
-	Symbol string
+	symbol string
 	image  *ImageBinary
-	Width  int
-	Height int
+	width  int
+	height int
 }
 
 func newFontSymbol(symbol string, img image.Image) *fontSymbol {
 	imgBin := NewImageBinary(img)
 	fs := &fontSymbol{
-		Symbol: symbol,
+		symbol: symbol,
 		image:  imgBin,
-		Width:  imgBin.Width,
-		Height: imgBin.Height,
+		width:  imgBin.Width,
+		height: imgBin.Height,
 	}
 
 	return fs
 }
 
-func (f *fontSymbol) String() string { return f.Symbol }
+func (f *fontSymbol) String() string { return f.symbol }
 
 type fontSymbolLookup struct {
-	fontSymbol *fontSymbol
-	x, y       int
-	g          float64
-	size       int
+	fs   *fontSymbol
+	x, y int
+	g    float64
+	size int
 }
 
 func newFontSymbolLookup(fs *fontSymbol, x, y int, g float64) *fontSymbolLookup {
@@ -42,15 +42,15 @@ func newFontSymbolLookup(fs *fontSymbol, x, y int, g float64) *fontSymbolLookup 
 }
 
 func (l *fontSymbolLookup) cross(f *fontSymbolLookup) bool {
-	r := image.Rect(l.x, l.y, l.x+l.fontSymbol.Width, l.y+l.fontSymbol.Height)
-	r2 := image.Rect(f.x, f.y, f.x+f.fontSymbol.Width, f.y+f.fontSymbol.Height)
+	r := image.Rect(l.x, l.y, l.x+l.fs.width, l.y+l.fs.height)
+	r2 := image.Rect(f.x, f.y, f.x+f.fs.width, f.y+f.fs.height)
 
 	return r.Intersect(r2) != image.Rectangle{}
 }
 
 func (l *fontSymbolLookup) yCross(f *fontSymbolLookup) bool {
-	ly2 := l.y + l.fontSymbol.Height
-	fy2 := f.y + f.fontSymbol.Height
+	ly2 := l.y + l.fs.height
+	fy2 := f.y + f.fs.height
 
 	return (f.y >= l.y && f.y <= ly2) || (fy2 >= l.y && fy2 <= ly2)
 }
@@ -88,7 +88,7 @@ func (l *fontSymbolLookup) comesAfter(f *fontSymbolLookup) bool {
 }
 
 func (l *fontSymbolLookup) String() string {
-	return fmt.Sprintf("'%s'(%d,%d,%d)[%f]", l.fontSymbol.Symbol, l.x, l.y, l.size, l.g)
+	return fmt.Sprintf("'%s'(%d,%d,%d)[%f]", l.fs.symbol, l.x, l.y, l.size, l.g)
 }
 
 func (o *OCR) findAll(symbols []*fontSymbol, bi *ImageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {

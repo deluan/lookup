@@ -17,7 +17,7 @@ For an example on how to use it see function `TestLookupAll()` in the [test file
 
 ### To Do:
 - ~~Add basic LookUp function~~
-- Implement OCR
+- ~~Implement OCR~~
 - Optimize for speed
 - Clean-up API
 - Implement Scaling
