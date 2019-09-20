@@ -9,7 +9,7 @@ import (
 )
 
 func TestNumerator(t *testing.T) {
-	Convey("Given a two arrays", t, func() {
+	Convey("Given two imageBinary structs", t, func() {
 		a1 := image.NewGray(image.Rect(0, 0, 2, 2))
 		a2 := image.NewGray(image.Rect(0, 0, 2, 2))
 		b1 := newImageBinaryChannel(a1, gray)

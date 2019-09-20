@@ -17,13 +17,22 @@ func ensureGrayScale(imgSrc image.Image) image.Image {
 	grayImage := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
 	for x := 0; x < w; x++ {
 		for y := 0; y < h; y++ {
-			pixel := imgSrc.At(x, y).(color.NRGBA)
-			m := (float64(pixel.R) + float64(pixel.G) + float64(pixel.B)) / 3
-			grayColor := color.Gray{Y: uint8(m)}
-			grayImage.Set(x, y, grayColor)
+			pixel := imgSrc.At(x, y)
+			if _, ok := pixel.(color.NRGBA); ok {
+				pixel = nrgbaToGray(pixel)
+			} else {
+				pixel = color.GrayModel.Convert(pixel)
+			}
+			grayImage.Set(x, y, pixel)
 		}
 	}
 	return grayImage
+}
+
+func nrgbaToGray(pixel color.Color) color.Gray {
+	p := pixel.(color.NRGBA)
+	m := (float64(p.R) + float64(p.G) + float64(p.B)) / 3
+	return color.Gray{Y: uint8(m)}
 }
 
 func min(a, b int) int {
