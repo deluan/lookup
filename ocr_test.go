@@ -41,11 +41,27 @@ func TestOCR(t *testing.T) {
 				text, _ := ocr.Recognize(img)
 
 				Convey("It recognizes the text in the image", func() {
-					//So(text, ShouldEqual, "3662\n32€/€​")
-					So(text, ShouldNotBeEmpty)
+					So(text, ShouldEqual, "3662\n32€/€")
 				})
 			})
 		})
 
 	})
+}
+
+func BenchmarkOCR(b *testing.B) {
+	b.StopTimer()
+	ocr := NewOCR(0.7)
+	if err := ocr.LoadFont("testdata/font_1"); err != nil {
+		panic(err)
+	}
+	img := loadImageColor("test3.png")
+	if _, err := ocr.Recognize(img); err != nil {
+		panic(err)
+	}
+	b.StartTimer()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		ocr.Recognize(img)
+	}
 }

@@ -47,13 +47,6 @@ func lookupAll(imgBin *ImageBinary, templateBin *ImageBinary, m float64) ([]GPoi
 	return list, nil
 }
 
-func min(a, b int) int {
-	if a < b {
-		return a
-	}
-	return b
-}
-
 func lookup(img *ImageBinary, template *ImageBinary, x int, y int, m float64) (*GPoint, error) {
 	ci := img.Channels
 	ct := template.Channels

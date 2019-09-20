@@ -3,7 +3,7 @@ watch:
 	goconvey -cover -excludedDirs examples
 
 test:
-	go test ./...
+	go test -v
 
 bench:
 	go test -bench=. -run=XXX

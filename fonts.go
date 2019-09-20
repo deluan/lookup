@@ -27,6 +27,8 @@ func NewFontSymbol(symbol string, img image.Image) *FontSymbol {
 	return fs
 }
 
+func (f *FontSymbol) String() string { return f.Symbol }
+
 func loadFont(path string) ([]*FontSymbol, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -65,6 +67,6 @@ func loadSymbol(path string, fileName string) (*FontSymbol, error) {
 	}
 
 	symbolName = strings.Replace(symbolName, "\u200b", "", -1) // Remove zero width spaces
-	fs := NewFontSymbol(strings.TrimSuffix(symbolName, ".png"), img)
+	fs := NewFontSymbol(strings.TrimSuffix(symbolName, ".png"), ConvertToAverageGrayScale(img))
 	return fs, nil
 }

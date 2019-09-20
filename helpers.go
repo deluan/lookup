@@ -22,3 +22,24 @@ func ConvertToAverageGrayScale(imgSrc image.Image) image.Image {
 	}
 	return grayScale
 }
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func abs(x int) int {
+	if x > 0 {
+		return x
+	}
+	return x * -1
+}
