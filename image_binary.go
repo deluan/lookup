@@ -27,19 +27,6 @@ type ImageBinaryChannel struct {
 	Height        int
 }
 
-func NewImageBinaryChannel(img image.Image, channelType ChannelType) *ImageBinaryChannel {
-	max := img.Bounds().Max
-	ibc := &ImageBinaryChannel{
-		ChannelType: channelType,
-		Width:       max.X,
-		Height:      max.Y,
-	}
-	ibc.integralImage = NewIntegralImage(img)
-	ibc.ZeroMeanImage = createZeroMeanImage(img, ibc.integralImage.Mean)
-
-	return ibc
-}
-
 // Standard deviation, no sqrt and no mean
 func (c *ImageBinaryChannel) Dev2nRect(x1, y1, x2, y2 int) float64 {
 	return c.integralImage.dev2nRect(x1, y1, x2, y2)
@@ -61,27 +48,40 @@ type ImageBinary struct {
 
 func NewImageBinary(img image.Image) *ImageBinary {
 	max := img.Bounds().Max
-	ibg := &ImageBinary{
+	ib := &ImageBinary{
 		Width:  max.X,
 		Height: max.Y,
 		Size:   max.X * max.Y,
 	}
 	if _, ok := img.(*image.Gray); ok {
-		c := NewImageBinaryChannel(img, Gray)
-		ibg.Channels = append(ibg.Channels, c)
+		c := newImageBinaryChannel(img, Gray)
+		ib.Channels = append(ib.Channels, c)
 	} else {
-		ibg.Channels = ExtractRGBChannels(img, Red, Green, Blue)
+		ib.Channels = newImageBinaryChannels(img, Red, Green, Blue)
 	}
-	return ibg
+	return ib
 }
 
-// Extract one or more channels from image, and wraps them in ImageBinaryChannels
-func ExtractRGBChannels(imgSrc image.Image, colorChannelTypes ...ChannelType) []*ImageBinaryChannel {
+func newImageBinaryChannel(img image.Image, channelType ChannelType) *ImageBinaryChannel {
+	max := img.Bounds().Max
+	ibc := &ImageBinaryChannel{
+		ChannelType: channelType,
+		Width:       max.X,
+		Height:      max.Y,
+	}
+	ibc.integralImage = NewIntegralImage(img)
+	ibc.ZeroMeanImage = createZeroMeanImage(img, ibc.integralImage.Mean)
+
+	return ibc
+}
+
+// Extract one or more color channels from image, and wraps them in ImageBinaryChannels
+func newImageBinaryChannels(imgSrc image.Image, colorChannelTypes ...ChannelType) []*ImageBinaryChannel {
 	channels := make([]*ImageBinaryChannel, 3)
 	max := imgSrc.Bounds().Max
 	w, h := max.X, max.Y
 	for i, channelType := range colorChannelTypes {
-		grayScale := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
+		colorChannel := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
 				colorPixel := imgSrc.At(x, y).(color.NRGBA)
@@ -95,10 +95,10 @@ func ExtractRGBChannels(imgSrc image.Image, colorChannelTypes ...ChannelType) []
 					c = colorPixel.B
 				}
 				grayPixel := color.Gray{Y: c}
-				grayScale.Set(x, y, grayPixel)
+				colorChannel.Set(x, y, grayPixel)
 			}
 		}
-		channels[i] = NewImageBinaryChannel(grayScale, channelType)
+		channels[i] = newImageBinaryChannel(colorChannel, channelType)
 	}
 	return channels
 }

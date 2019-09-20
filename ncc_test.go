@@ -47,8 +47,8 @@ func TestNumerator(t *testing.T) {
 	Convey("Given a two arrays", t, func() {
 		a1 := image.NewGray(image.Rect(0, 0, 2, 2))
 		a2 := image.NewGray(image.Rect(0, 0, 2, 2))
-		b1 := NewImageBinaryChannel(a1, Gray)
-		b2 := NewImageBinaryChannel(a2, Gray)
+		b1 := newImageBinaryChannel(a1, Gray)
+		b2 := newImageBinaryChannel(a2, Gray)
 		b1.ZeroMeanImage = []float64{1, 2, 3, 4}
 		b2.ZeroMeanImage = []float64{1, 2, 3, 4}
 
