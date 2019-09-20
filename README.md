@@ -9,7 +9,7 @@ It is a nice, simple and friendly to use library which helps you to lookup objec
 it has a OCR functionality. Using Lookup you can do OCR tricks like recognizing any information 
 in your Robot application. Which can be useful for debugging or automating things.
 
-This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) to Go.
+This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) to GoLang.
 Details on NCC (Normalized cross correlation) used by this library can be found in the original 
 library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
@@ -18,5 +18,7 @@ For an example on how to use it see function `TestLookupAll()` in the [test file
 ### To Do:
 - ~~Add basic LookUp function~~
 - Implement OCR
+- Optimize for speed
+- Clean-up API
 - Implement Scaling
 - Better docs
