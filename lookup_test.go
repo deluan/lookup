@@ -9,8 +9,8 @@ import (
 
 func TestLookupAll(t *testing.T) {
 	Convey("Given an Color image and a template to look for", t, func() {
-		img := loadImageColor("cyclopst1.png")
-		template := loadImageColor("cyclopst3.png")
+		img := loadImageColor("testdata/cyclopst1.png")
+		template := loadImageColor("testdata/cyclopst3.png")
 
 		Convey("When searching", func() {
 			pp, _ := Color(img, template, 0.9)
@@ -23,8 +23,8 @@ func TestLookupAll(t *testing.T) {
 		})
 	})
 	Convey("Given an Gray Scale image and a template to look for", t, func() {
-		img := loadImageGray("cyclopst1.png")
-		template := loadImageGray("cyclopst3.png")
+		img := loadImageGray("testdata/cyclopst1.png")
+		template := loadImageGray("testdata/cyclopst3.png")
 
 		Convey("When searching", func() {
 			pp, _ := GrayScale(img, template, 0.9)

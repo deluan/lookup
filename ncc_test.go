@@ -25,8 +25,8 @@ func TestNumerator(t *testing.T) {
 }
 
 var (
-	benchImg         = loadImageColor("cyclopst1.png")
-	benchTemplate    = loadImageColor("cyclopst3.png")
+	benchImg         = loadImageColor("testdata/cyclopst1.png")
+	benchTemplate    = loadImageColor("testdata/cyclopst3.png")
 	benchImgBin      = newImageBinary(benchImg)
 	benchTemplateBin = newImageBinary(benchTemplate)
 )

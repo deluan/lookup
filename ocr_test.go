@@ -37,7 +37,7 @@ func TestOCR(t *testing.T) {
 			})
 
 			Convey("And when I pass an image to be recognized", func() {
-				img := loadImageColor("test3.png")
+				img := loadImageColor("testdata/test3.png")
 				text, _ := ocr.Recognize(img)
 
 				Convey("It recognizes the text in the image", func() {
@@ -55,7 +55,7 @@ func BenchmarkOCR(b *testing.B) {
 	if err := ocr.LoadFont("testdata/font_1"); err != nil {
 		panic(err)
 	}
-	img := loadImageGray("test3.png")
+	img := loadImageGray("testdata/test3.png")
 	if _, err := ocr.Recognize(img); err != nil {
 		panic(err)
 	}

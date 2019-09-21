@@ -6,7 +6,7 @@ import (
 )
 
 func loadImageColor(path string) image.Image {
-	imageFile, _ := os.Open("testdata/" + path)
+	imageFile, _ := os.Open(path)
 	defer imageFile.Close()
 	img, _, _ := image.Decode(imageFile)
 	return img
