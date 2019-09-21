@@ -12,12 +12,18 @@ type OCR struct {
 	fontFamilies map[string][]*fontSymbol
 	threshold    float64
 	allSymbols   []*fontSymbol
+	numThreads   int
 }
 
-func NewOCR(threshold float64) *OCR {
+func NewOCR(threshold float64, numThreads ...int) *OCR {
 	ocr := &OCR{
 		fontFamilies: make(map[string][]*fontSymbol),
 		threshold:    threshold,
+		numThreads:   1,
+	}
+
+	if len(numThreads) > 0 {
+		ocr.numThreads = numThreads[0]
 	}
 
 	return ocr
@@ -75,7 +81,7 @@ func (o *OCR) recognize(bi *imageBinary, x1, y1, x2, y2 int) (string, error) {
 }
 
 func (o *OCR) findAll(symbols []*fontSymbol, bi *imageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {
-	jc := startJob()
+	jc := startJob(o.numThreads)
 	for _, fs := range symbols {
 		jc.lookupSymbolParallel(bi, fs, o.threshold)
 	}

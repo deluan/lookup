@@ -16,12 +16,12 @@ type jobControl struct {
 	results chan *fontSymbolLookup
 }
 
-func startJob() *jobControl {
+func startJob(numThreads int) *jobControl {
 	jc := &jobControl{
-		tasks:   make(chan *lookupTask, 100),
-		results: make(chan *fontSymbolLookup, 100),
+		tasks:   make(chan *lookupTask, 10),
+		results: make(chan *fontSymbolLookup, 1000), // TODO Handle possible deadlock, if results has not enough room
 	}
-	for i := 0; i < 10; i++ {
+	for i := 0; i < numThreads; i++ {
 		go jc.lookupSymbolWorker()
 		jc.wg.Add(1)
 	}

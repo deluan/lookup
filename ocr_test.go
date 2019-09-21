@@ -65,3 +65,20 @@ func BenchmarkOCR(b *testing.B) {
 		_, _ = ocr.Recognize(img)
 	}
 }
+
+func BenchmarkOCRParallel(b *testing.B) {
+	b.StopTimer()
+	ocr := NewOCR(0.7, 10)
+	if err := ocr.LoadFont("testdata/font_1"); err != nil {
+		panic(err)
+	}
+	img := loadImageGray("test3.png")
+	if _, err := ocr.Recognize(img); err != nil {
+		panic(err)
+	}
+	b.StartTimer()
+	b.ReportAllocs()
+	for i := 0; i < b.N; i++ {
+		_, _ = ocr.Recognize(img)
+	}
+}
