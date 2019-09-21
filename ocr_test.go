@@ -68,7 +68,7 @@ func BenchmarkOCR(b *testing.B) {
 
 func BenchmarkOCRParallel(b *testing.B) {
 	b.StopTimer()
-	ocr := NewOCR(0.7, 10)
+	ocr := NewOCR(0.7, 5)
 	if err := ocr.LoadFont("testdata/font_1"); err != nil {
 		panic(err)
 	}
