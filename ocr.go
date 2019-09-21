@@ -99,10 +99,7 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 		for j := k + 1; j < len(all); j++ {
 			jj := all[j]
 			if kk.cross(jj) {
-				// delete all[j]
-				copy(all[j:], all[j+1:])
-				all[len(all)-1] = nil
-				all = all[:len(all)-1]
+				all = deleteSymbol(all, j)
 				j--
 			}
 		}
@@ -114,7 +111,6 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 	})
 
 	var str strings.Builder
-
 	x := all[0].x
 	cx := 0
 	for _, s := range all {
@@ -126,7 +122,7 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 			str.WriteString(" ")
 		}
 
-		// if we drop back, then we have a end of line
+		// if we drop back, then we have an end of line
 		if s.x < x {
 			str.WriteString("\n")
 		}
@@ -137,4 +133,10 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 	}
 
 	return str.String()
+}
+
+func deleteSymbol(all []*fontSymbolLookup, i int) []*fontSymbolLookup {
+	copy(all[i:], all[i+1:])
+	all[len(all)-1] = nil
+	return all[:len(all)-1]
 }

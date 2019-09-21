@@ -5,12 +5,12 @@ import (
 )
 
 // Search for all symbols in the image in parallel. Uses a Fan-out/fan-in approach.
-func findAllInParallel(numWorkers int, symbols []*fontSymbol, bi *imageBinary, threshold float64) ([]*fontSymbolLookup, error) {
+func findAllInParallel(numWorkers int, symbols []*fontSymbol, img *imageBinary, threshold float64) ([]*fontSymbolLookup, error) {
 	f := &parallelFinder{
-		img:        bi,
-		threshold:  threshold,
 		numWorkers: max(numWorkers, 1),
 		symbols:    symbols,
+		img:        img,
+		threshold:  threshold,
 	}
 	return f.lookupAll()
 }
