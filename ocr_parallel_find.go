@@ -9,7 +9,7 @@ func findAllInParallel(numWorkers int, symbols []*fontSymbol, bi *imageBinary, t
 	f := &parallelFinder{
 		img:        bi,
 		threshold:  threshold,
-		numWorkers: numWorkers,
+		numWorkers: max(numWorkers, 1),
 		symbols:    symbols,
 	}
 	return f.lookupAll()
@@ -107,7 +107,7 @@ func (f *parallelFinder) lookupAll() ([]*fontSymbolLookup, error) {
 	in := f.prepare(done)
 
 	var workerOutputs = make([]<-chan lookupResult, f.numWorkers)
-	for w := 0; w < max(f.numWorkers, 1); w++ {
+	for w := 0; w < f.numWorkers; w++ {
 		workerOutputs[w] = f.addWorker(done, in)
 	}
 

@@ -21,7 +21,7 @@ for usage examples.
 ### To Do:
 - ~~Add basic LookUp function~~
 - ~~Implement OCR~~
-- Optimize for speed
+- ~~Optimize for speed~~
 - Clean-up API
 - Implement Scaling
 - Better docs
