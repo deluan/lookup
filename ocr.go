@@ -75,20 +75,16 @@ func (o *OCR) recognize(bi *imageBinary, x1, y1, x2, y2 int) (string, error) {
 }
 
 func (o *OCR) findAll(symbols []*fontSymbol, bi *imageBinary, x1, y1, x2, y2 int) ([]*fontSymbolLookup, error) {
-	var found []*fontSymbolLookup
-
+	jc := startJob()
 	for _, fs := range symbols {
-		pp, err := lookupAll(bi, fs.image, o.threshold)
-		if err != nil {
-			return nil, err
-		}
-		for _, p := range pp {
-			fsl := newFontSymbolLookup(fs, p.X, p.Y, p.G)
-			found = append(found, fsl)
-		}
+		jc.lookupSymbolParallel(bi, fs, o.threshold)
 	}
 
-	return found, nil
+	results, err := jc.collectResults()
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }
 
 func biggerFirst(list []*fontSymbolLookup) func(i, j int) bool {

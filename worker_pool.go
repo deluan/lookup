@@ -5,59 +5,59 @@ import (
 )
 
 type lookupTask struct {
-	imgBin      *imageBinary
-	templateBin *imageBinary
-	x, y        int
-	m           float64
+	img       *imageBinary
+	fs        *fontSymbol
+	threshold float64
 }
 
 type jobControl struct {
-	wg        sync.WaitGroup
-	taskQueue chan *lookupTask
-	results   chan *GPoint
+	wg      sync.WaitGroup
+	tasks   chan *lookupTask
+	results chan *fontSymbolLookup
 }
 
 func startJob() *jobControl {
 	jc := &jobControl{
-		taskQueue: make(chan *lookupTask, 100),
-		results:   make(chan *GPoint, 100),
+		tasks:   make(chan *lookupTask, 100),
+		results: make(chan *fontSymbolLookup, 100),
 	}
 	for i := 0; i < 10; i++ {
-		go lookupWorker(i+1, jc)
+		go jc.lookupSymbolWorker()
 		jc.wg.Add(1)
 	}
 	return jc
 }
 
-func lookupWorker(id int, jc *jobControl) {
-	for task := range jc.taskQueue {
-		g, _ := lookup(task.imgBin, task.templateBin, task.x, task.y, task.m)
-		if g != nil {
-			jc.results <- g
+func (jc *jobControl) lookupSymbolWorker() {
+	for task := range jc.tasks {
+		pp, _ := lookupAll(task.img, task.fs.image, task.threshold)
+		if pp != nil {
+			for _, p := range pp {
+				l := newFontSymbolLookup(task.fs, p.X, p.Y, p.G)
+				jc.results <- l
+			}
 		}
 	}
 	jc.wg.Done()
 }
 
-func lookupParallel(jc *jobControl, img *imageBinary, template *imageBinary, x int, y int, m float64) {
+func (jc *jobControl) lookupSymbolParallel(img *imageBinary, fs *fontSymbol, threshold float64) {
 	task := &lookupTask{
-		imgBin:      img,
-		templateBin: template,
-		x:           x,
-		y:           y,
-		m:           m,
+		img:       img,
+		fs:        fs,
+		threshold: threshold,
 	}
-	jc.taskQueue <- task
+	jc.tasks <- task
 }
 
-func collectResults(jc *jobControl) []GPoint {
-	close(jc.taskQueue)
+func (jc *jobControl) collectResults() ([]*fontSymbolLookup, error) {
+	close(jc.tasks)
 
 	done := make(chan bool)
-	var results []GPoint
+	var results []*fontSymbolLookup
 	go func() {
 		for r := range jc.results {
-			results = append(results, *r)
+			results = append(results, r)
 		}
 		done <- true
 	}()
@@ -65,5 +65,5 @@ func collectResults(jc *jobControl) []GPoint {
 	jc.wg.Wait()
 	close(jc.results)
 	<-done
-	return results
+	return results, nil // TODO Implement error handling
 }

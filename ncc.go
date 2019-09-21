@@ -20,19 +20,24 @@ type GPoint struct {
 // See http://www.fmwconcepts.com/imagemagick/similar/index.php
 
 func lookupAll(imgBin *imageBinary, templateBin *imageBinary, m float64) ([]GPoint, error) {
+	var list []GPoint
 	x1, y1 := 0, 0
 	x2, y2 := imgBin.width-1, imgBin.height-1
 
 	templateWidth := templateBin.width
 	templateHeight := templateBin.height
-
-	jc := startJob()
 	for x := x1; x <= x2-templateWidth+1; x++ {
 		for y := y1; y <= y2-templateHeight+1; y++ {
-			lookupParallel(jc, imgBin, templateBin, x, y, m)
+			g, err := lookup(imgBin, templateBin, x, y, m)
+			if err != nil {
+				return nil, err
+			}
+			if g != nil {
+				list = append(list, *g)
+			}
 		}
 	}
-	return collectResults(jc), nil
+	return list, nil
 }
 
 func lookup(img *imageBinary, template *imageBinary, x int, y int, m float64) (*GPoint, error) {
