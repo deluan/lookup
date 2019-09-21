@@ -62,6 +62,6 @@ func BenchmarkOCR(b *testing.B) {
 	b.StartTimer()
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		ocr.Recognize(img)
+		_, _ = ocr.Recognize(img)
 	}
 }

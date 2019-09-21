@@ -7,7 +7,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestLookoutAll(t *testing.T) {
+func TestLookupAll(t *testing.T) {
 	Convey("Given an Color image and a template to look for", t, func() {
 		img := loadImageColor("cyclopst1.png")
 		template := loadImageColor("cyclopst3.png")
