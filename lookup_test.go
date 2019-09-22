@@ -10,7 +10,7 @@ import (
 func TestLookup(t *testing.T) {
 	Convey("Given a GrayScale image", t, func() {
 		img := loadImageGray("testdata/cyclopst1.png")
-		l := NewLookupGrayScale(img)
+		l := NewLookup(img)
 
 		Convey("When I search using a grayscale template", func() {
 			template := loadImageGray("testdata/cyclopst3.png")
@@ -39,7 +39,7 @@ func TestLookup(t *testing.T) {
 
 	Convey("Given a Color image", t, func() {
 		img := loadImageColor("testdata/cyclopst1.png")
-		l := NewLookup(img)
+		l := NewLookupColor(img)
 
 		Convey("When I search using a color template", func() {
 			template := loadImageColor("testdata/cyclopst3.png")

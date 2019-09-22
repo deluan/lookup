@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// GPoint represents a match of a template inside an image.
 type GPoint struct {
 	X, Y int
 	G    float64
