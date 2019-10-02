@@ -1,4 +1,5 @@
 # LookUp
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/deluan/lookup?label=latest)
 [![Documentation](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat)](https://godoc.org/github.com/deluan/lookup) 
 [![Build Status](https://github.com/deluan/lookup/workflows/CI/badge.svg)](https://github.com/deluan/lookup/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deluan/lookup)](https://goreportcard.com/report/github.com/deluan/lookup)
