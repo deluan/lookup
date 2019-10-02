@@ -16,7 +16,7 @@ This library is a straight port of the [Java LookUp library](https://github.com/
 Details on NCC (Normalized cross correlation) used by this library can be found in the original 
 library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
-While there is no documentation, take a look at the [lookup_test.go](lookup_test.go) and [ocr_test.go](ocr_test.go) files
+While there is no documentation, take a look at the [examples file](examples_test.go)
 for usage examples.
 
 ### To Do:
