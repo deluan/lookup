@@ -7,8 +7,6 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/d4ff0afbc348c6b9291e/maintainability)](https://codeclimate.com/github/deluan/lookup/maintainability)
 
 
-**NOTE**: This is alpha quality code. The API is not finalized yet and will most likely change.
-
 It is a nice, simple and fast library which helps you to lookup objects on a screen. It also includes 
 OCR functionality. Using Lookup you can do OCR tricks like recognizing any information in your Robot application. 
 Which can be useful for debugging or automating things.
@@ -17,8 +15,8 @@ This library is a straight port of the [Java LookUp library](https://github.com/
 Details on NCC (Normalized cross correlation) used by this library can be found in the original 
 library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
-While there is no documentation, take a look at the [examples file](examples_test.go)
-for usage examples.
+The [documentation](https://godoc.org/github.com/deluan/lookup) is a work in progress, take a look at the 
+[examples file](examples_test.go) for usage examples.
 
 ### To Do:
 - ~~Add basic LookUp function~~
