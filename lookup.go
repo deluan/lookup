@@ -1,8 +1,3 @@
-// Package lookup implements a nice, simple and fast library which helps you to
-// lookup objects on a screen. It also includes OCR functionality. Using Lookup
-// you can do OCR tricks like recognizing any information in your Robot application.
-//
-// The image search algorithm is based on the Normalized Cross Correlation algorithm.
 package lookup
 
 import "image"
