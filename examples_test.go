@@ -24,6 +24,8 @@ func ExampleNewLookup() {
 
 	// Find all occurrences of the template in the image
 	pp, _ := l.FindAll(template, 0.9)
+
+	// Print the results
 	if len(pp) > 0 {
 		fmt.Printf("Found %d matches:\n", len(pp))
 		for _, p := range pp {
@@ -52,6 +54,8 @@ func ExampleNewOCR() {
 
 	// Recognize text in image
 	text, _ := ocr.Recognize(img)
+
+	// Print the results
 	fmt.Printf("Text found in image: %s\n", text)
 
 	// Output:
