@@ -81,7 +81,7 @@ func (o *OCR) updateAllSymbols() {
 
 // Recognize the text in the image using the fontsets previously loaded
 func (o *OCR) Recognize(img image.Image) (string, error) {
-	bi := newImageBinary(ensureGrayScale(img))
+	bi := newImageBinary(EnsureGrayScale(img))
 	return o.recognize(bi, 0, 0, bi.width-1, bi.height-1)
 }
 

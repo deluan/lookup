@@ -14,7 +14,7 @@ func loadImageColor(path string) image.Image {
 
 func loadImageGray(path string) image.Image {
 	img := loadImageColor(path)
-	return ensureGrayScale(img)
+	return EnsureGrayScale(img)
 }
 
 func newGrayImage(width, height int, pixels []uint8) image.Image {
