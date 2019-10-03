@@ -8,6 +8,16 @@ import (
 	"strings"
 )
 
+// OCR implements a simple OCR based on the Lookup functions. It allows multiple fontsets,
+// just call LoadFont for each fontset.
+//
+// If you need to encode special symbols use UNICODE in the file name. For example if you
+// need to have '\' character (which is prohibited in the path and file name) specify
+// %2F.png as a image symbol name.
+//
+// Sometimes you need to specify two different image for one symbol (if image / font symbol vary
+// too much). To do so add unicode ZERO WIDTH SPACE symbol (%E2%80%8B) to the filename.
+// Ex: %2F%E2%80%8B.png will produce '/' symbol as well.
 type OCR struct {
 	fontFamilies map[string][]*fontSymbol
 	threshold    float64
@@ -15,6 +25,10 @@ type OCR struct {
 	numThreads   int
 }
 
+// NewOCR creates a new OCR instance, that will use the given threshold. You can optionally
+// parallelize the processing by specifying the number of threads to use. The optimal number
+// varies and depends on your use case (size of fontset x size of image). Default is use
+// only one thread
 func NewOCR(threshold float64, numThreads ...int) *OCR {
 	ocr := &OCR{
 		fontFamilies: make(map[string][]*fontSymbol),
@@ -29,6 +43,10 @@ func NewOCR(threshold float64, numThreads ...int) *OCR {
 	return ocr
 }
 
+// LoadFont loads a specific fontset from the given folder. Fonts are simple image files
+// containing a PNG/JPEG of the font, and named after the "letter" represented by the image.
+//
+// This can be called multiple times, with different folders, to load different fontsets.
 func (o *OCR) LoadFont(fontPath string) error {
 	if _, err := os.Stat(fontPath); os.IsNotExist(err) {
 		return err
@@ -61,6 +79,7 @@ func (o *OCR) updateAllSymbols() {
 	}
 }
 
+// Recognize the text in the image using the fontsets previously loaded
 func (o *OCR) Recognize(img image.Image) (string, error) {
 	bi := newImageBinary(ensureGrayScale(img))
 	return o.recognize(bi, 0, 0, bi.width-1, bi.height-1)
