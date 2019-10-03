@@ -18,7 +18,7 @@ func ExampleNewLookup() {
 	l := lookup.NewLookup(img)
 
 	// Load a template to search inside the image
-	templateFile, _ := os.Open("testdata/cyclopst1.png")
+	templateFile, _ := os.Open("testdata/cyclopst3.png")
 	defer templateFile.Close()
 	template, _, _ := image.Decode(templateFile)
 
@@ -32,6 +32,10 @@ func ExampleNewLookup() {
 	} else {
 		println("No matches found")
 	}
+
+	// Output:
+	// Found 1 matches:
+	// - (21, 7) with 0.997942 accuracy
 }
 
 func ExampleNewOCR() {
@@ -49,4 +53,8 @@ func ExampleNewOCR() {
 	// Recognize text in image
 	text, _ := ocr.Recognize(img)
 	fmt.Printf("Text found in image: %s\n", text)
+
+	// Output:
+	// Text found in image: 3662
+	// 32€/€
 }
