@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-// Converts any image.Image to image.Gray, using a simple average of the color channels.
+// Helper function to converts any image.Image to image.Gray, using a simple average of the color channels.
 // Ignores luminosity
 // Ref: https://stackoverflow.com/a/42518487
 func EnsureGrayScale(imgSrc image.Image) image.Image {
