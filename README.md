@@ -11,9 +11,9 @@ It is a nice, simple and fast library which helps you to lookup objects on a scr
 OCR functionality. Using Lookup you can do OCR tricks like recognizing any information in your Robot
 application. Which can be useful for debugging or automating things.
 
-This library is a port of this [Java Lookup library](https://github.com/iamshajeer/lookup) 
+This library is a port of this [Java Lookup library](https://gitlab.com/axet/lookup) 
 to GoLang. Details on NCC (Normalized cross correlation) used by this library can be found in the 
-original library's ['doc'](https://github.com/iamshajeer/lookup/tree/master/doc) folder (a lot of math).
+original library's ['docs'](https://gitlab.com/axet/lookup/tree/master/docs) folder (a lot of math).
 
 ### Usage
 
