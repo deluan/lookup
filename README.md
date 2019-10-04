@@ -18,7 +18,9 @@ original library's ['doc'](https://github.com/iamshajeer/lookup/tree/master/doc)
 ### Usage
 
 Take a look at the examples files for [Lookup](examples_lookup_test.go) and [OCR](examples_ocr_test.go) 
-for usage samples. For more details check the [documentation](https://godoc.org/github.com/deluan/lookup).
+for usage samples. All images used in the examples are available in the [testdata](testdata) folder.
+
+For more details check the full [documentation](https://godoc.org/github.com/deluan/lookup).
 
 ### To Do:
 - ~~Add basic LookUp function~~
