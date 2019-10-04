@@ -17,9 +17,13 @@ original library's ['docs'](https://gitlab.com/axet/lookup/tree/master/docs) fol
 
 ### Usage
 
-Take a look at the examples files for [Lookup](examples_lookup_test.go) and [OCR](examples_ocr_test.go) 
-for usage samples. All images used in the examples are available in the [testdata](testdata) folder.
+Add this library to your project with:
+```shell script
+go get github.com/deluan/lookup
+```
 
+To learn how to use it, take a look at the examples files for [Lookup](examples_lookup_test.go) and 
+[OCR](examples_ocr_test.go). All images used in the examples are available in the [testdata](testdata) folder. 
 For more details check the full [documentation](https://godoc.org/github.com/deluan/lookup).
 
 ### To Do:
