@@ -13,7 +13,7 @@ application. Which can be useful for debugging or automating things.
 
 This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) 
 to GoLang. Details on NCC (Normalized cross correlation) used by this library can be found in the 
-original library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
+original library's ['doc'](https://github.com/iamshajeer/lookup/tree/master/doc) folder (a lot of math).
 
 ### Usage
 
