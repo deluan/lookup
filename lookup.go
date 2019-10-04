@@ -8,7 +8,7 @@ type Lookup struct {
 	imgBin *imageBinary
 }
 
-// Creates a Lookup object. Lookup objects created by these function will do a gray
+// NewLookup creates a Lookup object. Lookup objects created by these function will do a gray
 // scale search of the templates. Note that if the image or any template is not GrayScale,
 // it will be converted automatically. This could cause some performance hits
 func NewLookup(image image.Image) *Lookup {
@@ -18,7 +18,7 @@ func NewLookup(image image.Image) *Lookup {
 	}
 }
 
-// Creates a Lookup object that works with all color channels of the image (RGB).
+// NewLookupColor creates a Lookup object that works with all color channels of the image (RGB).
 // Keep in mind that Lookup objects created with this function can only accept color
 // templates as parameters to the FindAll method
 func NewLookupColor(image image.Image) *Lookup {
@@ -27,7 +27,7 @@ func NewLookupColor(image image.Image) *Lookup {
 	}
 }
 
-//  Search for all occurrences of template only inside a part of the image.
+//  FindAllInRect searches for all occurrences of template only inside a part of the image.
 //  This can be used to speed up the search if you know the region of the
 //  image that the template should appear in.
 func (l *Lookup) FindAllInRect(template image.Image, rect image.Rectangle, threshold float64) ([]GPoint, error) {
@@ -38,7 +38,7 @@ func (l *Lookup) FindAllInRect(template image.Image, rect image.Rectangle, thres
 	return lookupAll(l.imgBin, rect.Min.X, rect.Min.Y, rect.Max.X, rect.Max.Y, tb, threshold)
 }
 
-//  Search for all occurrences of template inside the whole image.
+//  FindAll searches for all occurrences of template inside the whole image.
 func (l *Lookup) FindAll(template image.Image, threshold float64) ([]GPoint, error) {
 	return l.FindAllInRect(template, image.Rect(0, 0, l.imgBin.width-1, l.imgBin.height-1), threshold)
 }
