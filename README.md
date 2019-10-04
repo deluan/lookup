@@ -8,20 +8,22 @@
 
 
 It is a nice, simple and fast library which helps you to lookup objects on a screen. It also includes 
-OCR functionality. Using Lookup you can do OCR tricks like recognizing any information in your Robot application. 
-Which can be useful for debugging or automating things.
+OCR functionality. Using Lookup you can do OCR tricks like recognizing any information in your Robot
+application. Which can be useful for debugging or automating things.
 
-This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) to GoLang.
-Details on NCC (Normalized cross correlation) used by this library can be found in the original 
-library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
+This library is a straight port of the [Java LookUp library](https://github.com/iamshajeer/lookup) 
+to GoLang. Details on NCC (Normalized cross correlation) used by this library can be found in the 
+original library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
-The [documentation](https://godoc.org/github.com/deluan/lookup) is a work in progress, take a look at the 
-examples files for [Lookup](examples_lookup_test.go) and [OCR](examples_ocr_test.go) for usage examples.
+### Usage
+
+Take a look at the examples files for [Lookup](examples_lookup_test.go) and [OCR](examples_ocr_test.go) 
+for usage samples. For more details check the [documentation](https://godoc.org/github.com/deluan/lookup).
 
 ### To Do:
 - ~~Add basic LookUp function~~
 - ~~Implement OCR~~
 - ~~Optimize for speed~~
 - ~~Clean-up API~~
+- ~~Better docs~~
 - Implement Scaling
-- Better docs
