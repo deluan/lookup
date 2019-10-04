@@ -34,7 +34,7 @@ var (
 func BenchmarkLookupAll(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		_, _ = lookupAll(benchImgBin, benchTemplateBin, 0.9)
+		_, _ = lookupAll(benchImgBin, 0, 0, benchImgBin.width-1, benchImgBin.height-1, benchTemplateBin, 0.9)
 	}
 }
 

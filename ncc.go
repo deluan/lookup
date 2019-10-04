@@ -11,19 +11,8 @@ type GPoint struct {
 	G    float64
 }
 
-//  Normalized Cross Correlation algorithm
-//  1) mean && stddev
-//  2) image1(x,y) - mean1 && image2(x,y) - mean2
-//  3) [3] = (image1(x,y) - mean)(x,y) * (image2(x,y) - mean)(x,y)
-//  4) [4] = mean([3])
-//  5) [4] / (stddev1 * stddev2)
-//
-// See http://www.fmwconcepts.com/imagemagick/similar/index.php
-
-func lookupAll(imgBin *imageBinary, templateBin *imageBinary, m float64) ([]GPoint, error) {
+func lookupAll(imgBin *imageBinary, x1, y1, x2, y2 int, templateBin *imageBinary, m float64) ([]GPoint, error) {
 	var list []GPoint
-	x1, y1 := 0, 0
-	x2, y2 := imgBin.width-1, imgBin.height-1
 
 	templateWidth := templateBin.width
 	templateHeight := templateBin.height
@@ -41,6 +30,14 @@ func lookupAll(imgBin *imageBinary, templateBin *imageBinary, m float64) ([]GPoi
 	return list, nil
 }
 
+//  Normalized Cross Correlation algorithm
+//  1) mean && stddev
+//  2) image1(x,y) - mean1 && image2(x,y) - mean2
+//  3) [3] = (image1(x,y) - mean)(x,y) * (image2(x,y) - mean)(x,y)
+//  4) [4] = mean([3])
+//  5) [4] / (stddev1 * stddev2)
+//
+// See http://www.fmwconcepts.com/imagemagick/similar/index.php
 func lookup(img *imageBinary, template *imageBinary, x int, y int, m float64) (*GPoint, error) {
 	ci := img.channels
 	ct := template.channels

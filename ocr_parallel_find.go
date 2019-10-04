@@ -47,7 +47,7 @@ func (f *parallelFinder) addWorker(done <-chan struct{}, in <-chan *fontSymbol) 
 	go func() {
 		defer close(out)
 		for symbol := range in {
-			pp, err := lookupAll(f.img, symbol.image, f.threshold)
+			pp, err := lookupAll(f.img, 0, 0, f.img.width-1, f.img.height-1, symbol.image, f.threshold)
 			if err != nil {
 				out <- lookupResult{nil, err}
 				continue

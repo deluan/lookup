@@ -16,7 +16,7 @@ Details on NCC (Normalized cross correlation) used by this library can be found 
 library's ['docs'](https://github.com/corintio/lookup/tree/master/docs) folder (a lot of math).
 
 The [documentation](https://godoc.org/github.com/deluan/lookup) is a work in progress, take a look at the 
-[examples file](examples_test.go) for usage examples.
+examples files for [Lookup](examples_lookup_test.go) and [OCR](examples_ocr_test.go) for usage examples.
 
 ### To Do:
 - ~~Add basic LookUp function~~
