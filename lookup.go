@@ -27,9 +27,9 @@ func NewLookupColor(image image.Image) *Lookup {
 	}
 }
 
-//  FindAllInRect searches for all occurrences of template only inside a part of the image.
-//  This can be used to speed up the search if you know the region of the
-//  image that the template should appear in.
+// FindAllInRect searches for all occurrences of template only inside a part of the image.
+// This can be used to speed up the search if you know the region of the
+// image that the template should appear in.
 func (l *Lookup) FindAllInRect(template image.Image, rect image.Rectangle, threshold float64) ([]GPoint, error) {
 	if len(l.imgBin.channels) == 1 {
 		template = EnsureGrayScale(template)
@@ -38,7 +38,7 @@ func (l *Lookup) FindAllInRect(template image.Image, rect image.Rectangle, thres
 	return lookupAll(l.imgBin, rect.Min.X, rect.Min.Y, rect.Max.X, rect.Max.Y, tb, threshold)
 }
 
-//  FindAll searches for all occurrences of template inside the whole image.
+// FindAll searches for all occurrences of template inside the whole image.
 func (l *Lookup) FindAll(template image.Image, threshold float64) ([]GPoint, error) {
 	return l.FindAllInRect(template, image.Rect(0, 0, l.imgBin.width-1, l.imgBin.height-1), threshold)
 }
