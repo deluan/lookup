@@ -79,14 +79,15 @@ func (o *OCR) updateAllSymbols() {
 	}
 }
 
-// Recognize the text in the image using the fontsets previously loaded
+// Recognize the text in the image using the fontsets previously loaded. If a SubImage
+// is received, the search will be limited by the boundaries of the SubImage
 func (o *OCR) Recognize(img image.Image) (string, error) {
 	bi := newImageBinary(EnsureGrayScale(img))
-	return o.recognize(bi, 0, 0, bi.width-1, bi.height-1)
+	return o.recognize(bi, image.Rect(0, 0, bi.width-1, bi.height-1))
 }
 
-func (o *OCR) recognize(bi *imageBinary, x1, y1, x2, y2 int) (string, error) {
-	found, err := findAllInParallel(o.numThreads, o.allSymbols, bi, o.threshold)
+func (o *OCR) recognize(bi *imageBinary, rect image.Rectangle) (string, error) {
+	found, err := findAllInParallel(o.numThreads, o.allSymbols, bi, o.threshold, rect)
 	if err != nil {
 		return "", err
 	}

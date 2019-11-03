@@ -81,7 +81,7 @@ func newImageBinaryChannels(imgSrc image.Image, colorChannelTypes ...channelType
 	max := imgSrc.Bounds().Max
 	w, h := max.X, max.Y
 	for i, channelType := range colorChannelTypes {
-		colorChannel := image.NewGray(image.Rectangle{Min: image.Point{0, 0}, Max: image.Point{w, h}})
+		colorChannel := image.NewGray(image.Rectangle{Max: image.Point{w, h}})
 		for x := 0; x < w; x++ {
 			for y := 0; y < h; y++ {
 				colorPixel := imgSrc.At(x, y).(color.NRGBA)

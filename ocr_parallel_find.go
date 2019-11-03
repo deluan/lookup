@@ -1,16 +1,18 @@
 package lookup
 
 import (
+	"image"
 	"sync"
 )
 
 // Search for all symbols in the image in parallel. Uses a Fan-out/fan-in approach.
-func findAllInParallel(numWorkers int, symbols []*fontSymbol, img *imageBinary, threshold float64) ([]*fontSymbolLookup, error) {
+func findAllInParallel(numWorkers int, symbols []*fontSymbol, img *imageBinary, threshold float64, rect image.Rectangle) ([]*fontSymbolLookup, error) {
 	f := &parallelFinder{
 		numWorkers: max(numWorkers, 1),
 		symbols:    symbols,
 		img:        img,
 		threshold:  threshold,
+		rect:       rect,
 	}
 	return f.lookupAll()
 }
@@ -20,6 +22,7 @@ type parallelFinder struct {
 	threshold  float64
 	numWorkers int
 	symbols    []*fontSymbol
+	rect       image.Rectangle
 }
 
 type lookupResult struct {
@@ -47,7 +50,7 @@ func (f *parallelFinder) addWorker(done <-chan struct{}, in <-chan *fontSymbol) 
 	go func() {
 		defer close(out)
 		for symbol := range in {
-			pp, err := lookupAll(f.img, 0, 0, f.img.width-1, f.img.height-1, symbol.image, f.threshold)
+			pp, err := lookupAll(f.img, f.rect.Min.X, f.rect.Min.Y, f.rect.Max.X, f.rect.Max.Y, symbol.image, f.threshold)
 			if err != nil {
 				out <- lookupResult{nil, err}
 				continue

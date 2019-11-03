@@ -1,6 +1,7 @@
 package lookup
 
 import (
+	"image"
 	_ "image/png"
 	"testing"
 
@@ -9,7 +10,7 @@ import (
 
 func TestOCR(t *testing.T) {
 	Convey("Given an OCR object", t, func() {
-		ocr := NewOCR(0.7)
+		ocr := NewOCR(0.8)
 
 		Convey("When I try to load an invalid font directory", func() {
 			err := ocr.LoadFont("testdata/NON_EXISTENT")
@@ -42,6 +43,15 @@ func TestOCR(t *testing.T) {
 
 				Convey("It recognizes the text in the image", func() {
 					So(text, ShouldEqual, "3662\n32€/€")
+				})
+			})
+
+			Convey("And when I pass an subimage to be recognized", func() {
+				img := loadImageColor("testdata/full.png")
+				text, _ := ocr.Recognize(img.(*image.NRGBA).SubImage(image.Rect(1280, 646, 1280+61, 646+31)))
+
+				Convey("It only recognizes the text inside the subimage", func() {
+					So(text, ShouldEqual, "4339")
 				})
 			})
 		})
