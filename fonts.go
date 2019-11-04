@@ -131,7 +131,7 @@ func loadSymbol(path string, fileName string) (*fontSymbol, error) {
 	symbolName = strings.Replace(symbolName, "\u200b", "", -1) // Remove zero width spaces
 	fs := newFontSymbol(
 		strings.TrimSuffix(symbolName, ".png"),
-		EnsureGrayScale(img),
+		ensureGrayScale(img),
 	)
 	return fs, nil
 }

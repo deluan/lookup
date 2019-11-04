@@ -82,7 +82,7 @@ func (o *OCR) updateAllSymbols() {
 // Recognize the text in the image using the fontsets previously loaded. If a SubImage
 // is received, the search will be limited by the boundaries of the SubImage
 func (o *OCR) Recognize(img image.Image) (string, error) {
-	bi := newImageBinary(EnsureGrayScale(img))
+	bi := newImageBinary(ensureGrayScale(img))
 	return o.recognize(bi, image.Rect(0, 0, bi.width-1, bi.height-1))
 }
 

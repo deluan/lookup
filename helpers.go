@@ -5,9 +5,9 @@ import (
 	"image/color"
 )
 
-// EnsureGrayScale is a helper function to convert any image.Image to image.Gray, using a simple
+// ensureGrayScale is a helper function to convert any image.Image to image.Gray, using a simple
 // average of the color channels. Ignores luminosity.
-func EnsureGrayScale(imgSrc image.Image) image.Image {
+func ensureGrayScale(imgSrc image.Image) image.Image {
 	if _, ok := imgSrc.(*image.Gray); ok && (imgSrc.Bounds().Min == image.Point{}) {
 		return imgSrc
 	}

@@ -12,7 +12,7 @@ type Lookup struct {
 // scale search of the templates. Note that if the image or any template is not GrayScale,
 // it will be converted automatically. This could cause some performance hits
 func NewLookup(image image.Image) *Lookup {
-	imgGray := EnsureGrayScale(image)
+	imgGray := ensureGrayScale(image)
 	return &Lookup{
 		imgBin: newImageBinary(imgGray),
 	}
@@ -32,7 +32,7 @@ func NewLookupColor(image image.Image) *Lookup {
 // image that the template should appear in.
 func (l *Lookup) FindAllInRect(template image.Image, rect image.Rectangle, threshold float64) ([]GPoint, error) {
 	if len(l.imgBin.channels) == 1 {
-		template = EnsureGrayScale(template)
+		template = ensureGrayScale(template)
 	}
 	tb := newImageBinary(template)
 	return lookupAll(l.imgBin, rect.Min.X, rect.Min.Y, rect.Max.X, rect.Max.Y, tb, threshold)
