@@ -5,6 +5,8 @@ import (
 	"image"
 	"os"
 
+	_ "image/png"
+
 	"github.com/deluan/lookup"
 )
 
