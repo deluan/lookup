@@ -97,8 +97,8 @@ func loadFont(path string) ([]*fontSymbol, error) {
 		return nil, err
 	}
 
-	fonts := make([]*fontSymbol, len(files))
-	for i, f := range files {
+	fonts := make([]*fontSymbol, 0)
+	for _, f := range files {
 		if f.IsDir() || strings.HasPrefix(f.Name(), ".") {
 			continue
 		}
@@ -106,7 +106,7 @@ func loadFont(path string) ([]*fontSymbol, error) {
 		if err != nil {
 			return nil, err
 		}
-		fonts[i] = fs
+		fonts = append(fonts,fs)
 	}
 	return fonts, nil
 }
