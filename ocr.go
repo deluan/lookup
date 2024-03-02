@@ -133,12 +133,14 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 	var str strings.Builder
 	x := all[0].x
 	cx := 0
-	for _, s := range all {
+	for i, s := range all {
 		maxCX := max(cx, s.fs.width)
 
 		// if distance between end of previous symbol and beginning of the
 		// current is larger then a char size, then it is a space
-		if s.x-x >= maxCX {
+		// This should not be applied in the beginning (i == 0) as it would put a white space for
+		// any s.x > maxCX will have a (useless) whitespace in front
+		if s.x-x >= maxCX && i != 0 {
 			str.WriteString(" ")
 		}
 
