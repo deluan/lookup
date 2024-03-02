@@ -138,7 +138,7 @@ func (o *OCR) filterAndArrange(all []*fontSymbolLookup) string {
 
 		// if distance between end of previous symbol and beginning of the
 		// current is larger then a char size, then it is a space
-		if s.x-(x+cx) >= maxCX {
+		if s.x-x >= maxCX {
 			str.WriteString(" ")
 		}
 
