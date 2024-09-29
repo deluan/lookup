@@ -1,9 +1,8 @@
 # Lookup
 [![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/deluan/lookup?label=latest)](https://github.com/deluan/lookup/releases)
-[![Documentation](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat)](https://godoc.org/github.com/deluan/lookup) 
-[![Build Status](https://github.com/deluan/lookup/workflows/CI/badge.svg)](https://github.com/deluan/lookup/actions)
+[![Documentation](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat)](https://godoc.org/github.com/deluan/lookup)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/deluan/lookup/go.yml?branch=master&logo=github&style=flat-square)](https://github.com/deluan/lookup/actions)
 [![Go Report Card](https://goreportcard.com/badge/github.com/deluan/lookup)](https://goreportcard.com/report/github.com/deluan/lookup)
-[![Coverage](http://gocover.io/_badge/github.com/deluan/lookup)](http://gocover.io/github.com/deluan/lookup) 
 [![Maintainability](https://api.codeclimate.com/v1/badges/d4ff0afbc348c6b9291e/maintainability)](https://codeclimate.com/github/deluan/lookup/maintainability)
 
 
