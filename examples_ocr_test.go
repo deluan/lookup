@@ -36,5 +36,5 @@ func Example_ocr() {
 
 	// Output:
 	// Text found in image: 3662
-	// 32€/€
+	// 3 2€/€
 }

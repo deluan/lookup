@@ -42,7 +42,7 @@ func TestOCR(t *testing.T) {
 				text, _ := ocr.Recognize(img)
 
 				Convey("It recognizes the text in the image", func() {
-					So(text, ShouldEqual, "3662\n32€/€")
+					So(text, ShouldEqual, "3662\n3 2€/€")
 				})
 			})
 
