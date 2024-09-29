@@ -10,10 +10,10 @@ jobs:
         os: [macOS-latest, windows-latest, ubuntu-latest]
 
     steps:
-    - name: Set up Go 1.13
+    - name: Set up Go 1.18
       uses: actions/setup-go@v5
       with:
-        go-version: 1.13
+        go-version: 1.18
       id: go
 
     - name: Check out code into the Go module directory
