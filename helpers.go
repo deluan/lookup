@@ -8,6 +8,9 @@ import (
 // ensureGrayScale is a helper function to convert any image.Image to image.Gray, using a simple
 // average of the color channels. Ignores luminosity.
 func ensureGrayScale(imgSrc image.Image) image.Image {
+	if imgSrc == nil {
+		panic("lookup: received a nil image. Make sure to check errors from image.Decode and import the appropriate image decoder")
+	}
 	if _, ok := imgSrc.(*image.Gray); ok && (imgSrc.Bounds().Min == image.Point{}) {
 		return imgSrc
 	}

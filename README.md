@@ -21,6 +21,23 @@ Add this library to your project with:
 go get github.com/deluan/lookup
 ```
 
+The Go `image` package only knows about the image formats that you register.
+If you want to decode PNG, JPEG or other formats, remember to import their
+decoders for their side‑effects:
+
+```go
+import (
+    _ "image/png"
+    _ "image/jpeg"
+)
+```
+
+Without these imports calls like `image.Decode` will fail and may result in nil
+images being passed to Lookup.
+
+Passing a `nil` image to Lookup will now panic with a clear message. Make sure
+to check the errors returned by `image.Decode` before using the image.
+
 To learn how to use it, take a look at the example files for [Lookup](examples_lookup_test.go) and 
 [OCR](examples_ocr_test.go). All images used in the examples are available in the [testdata](testdata) folder. 
 For more details check the full [documentation](https://godoc.org/github.com/deluan/lookup).

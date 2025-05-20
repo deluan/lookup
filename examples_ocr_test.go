@@ -5,6 +5,7 @@ import (
 	"image"
 	"os"
 
+	_ "image/jpeg"
 	_ "image/png"
 
 	"github.com/deluan/lookup"
@@ -12,9 +13,16 @@ import (
 
 // Helper function to load an image from the filesystem
 func loadImageFromFile(imgPath string) image.Image {
-	imageFile, _ := os.Open(imgPath)
+	imageFile, err := os.Open(imgPath)
+	if err != nil {
+		panic(err)
+	}
 	defer imageFile.Close()
-	img, _, _ := image.Decode(imageFile)
+
+	img, _, err := image.Decode(imageFile)
+	if err != nil {
+		panic(err)
+	}
 	return img
 }
 
