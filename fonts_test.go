@@ -8,9 +8,9 @@ import (
 )
 
 func TestFontSymbol(t *testing.T) {
-	Convey("When I create a fontSymbol from a image dile", t, func() {
+	Convey("When I create a fontSymbol from a image file", t, func() {
 		img := loadImageGray("testdata/font_1/0.png")
-		fs := newFontSymbol("0", img)
+		fs := NewFontSymbol("0", img)
 		Convey("It loads the image as a imageBinary", func() {
 			So(fs.image, ShouldHaveSameTypeAs, &imageBinary{})
 			So(fs.image.width, ShouldEqual, img.Bounds().Max.X)

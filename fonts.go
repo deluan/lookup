@@ -4,46 +4,77 @@ import (
 	"fmt"
 	"image"
 	"io/ioutil"
+	"math"
 	"net/url"
 	"os"
 	"strings"
 )
 
-type fontSymbol struct {
-	symbol string
-	image  *imageBinary
-	width  int
-	height int
+type FontSymbol struct {
+	symbol  string
+	image   *imageBinary
+	width   int
+	height  int
+	advance int
 }
 
-func newFontSymbol(symbol string, img image.Image) *fontSymbol {
-	imgBin := newImageBinary(img)
-	fs := &fontSymbol{
-		symbol: symbol,
-		image:  imgBin,
-		width:  imgBin.width,
-		height: imgBin.height,
+// NewFontSymbolRune creates a new symbol for a rune. opts are optional (if set to nil).
+func NewFontSymbolRune(symbol rune, img image.Image, opts *NewFontSymbolOptions) *FontSymbol {
+	return NewFontSymbolOpts(string([]rune{symbol}), img, opts)
+}
+
+func NewFontSymbol(symbol string, img image.Image) *FontSymbol {
+	return NewFontSymbolOpts(symbol, img, nil)
+}
+
+// NewFontSymbolOpts creates a new symbol for a rune. Use NewFontSymbol for using the default options.
+func NewFontSymbolOpts(symbol string, img image.Image, opts *NewFontSymbolOptions) *FontSymbol {
+	imgBin := newImageBinary(ensureGrayScale(img))
+	advance := math.MaxInt
+	if opts != nil {
+		advance = opts.Advance
+	}
+	fs := &FontSymbol{
+		symbol:  symbol,
+		image:   imgBin,
+		width:   imgBin.width,
+		height:  imgBin.height,
+		advance: advance,
 	}
 
 	return fs
 }
 
-func (f *fontSymbol) String() string { return f.symbol }
+func (f FontSymbol) Advance() int {
+	if f.advance == math.MaxInt {
+		return f.width
+	}
+	return f.advance
+}
+
+func (f *FontSymbol) String() string { return f.symbol }
+
+type NewFontSymbolOptions struct {
+	// The advance of the symbol, taken into account when recognizing texts./
+	// This allows symbols to be closer/further away than the width of the symbol.
+	// Is ignored when set to math.MaxInt
+	Advance int
+}
 
 type fontSymbolLookup struct {
-	fs   *fontSymbol
+	fs   *FontSymbol
 	x, y int
 	g    float64
 	size int
 }
 
-func newFontSymbolLookup(fs *fontSymbol, x, y int, g float64) *fontSymbolLookup {
+func newFontSymbolLookup(fs *FontSymbol, x, y int, g float64) *fontSymbolLookup {
 	return &fontSymbolLookup{fs, x, y, g, fs.image.size}
 }
 
 func (l *fontSymbolLookup) cross(f *fontSymbolLookup) bool {
-	r := image.Rect(l.x, l.y, l.x+l.fs.width, l.y+l.fs.height)
-	r2 := image.Rect(f.x, f.y, f.x+f.fs.width, f.y+f.fs.height)
+	r := image.Rect(l.x, l.y, l.x+l.fs.Advance(), l.y+l.fs.height)
+	r2 := image.Rect(f.x, f.y, f.x+f.fs.Advance(), f.y+f.fs.height)
 
 	return r.Intersect(r2) != image.Rectangle{}
 }
@@ -91,13 +122,13 @@ func (l *fontSymbolLookup) String() string {
 	return fmt.Sprintf("'%s'(%d,%d,%d)[%f]", l.fs.symbol, l.x, l.y, l.size, l.g)
 }
 
-func loadFont(path string) ([]*fontSymbol, error) {
+func loadFont(path string) ([]*FontSymbol, error) {
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 
-	fonts := make([]*fontSymbol, 0)
+	fonts := make([]*FontSymbol, 0)
 	for _, f := range files {
 		if f.IsDir() || strings.HasPrefix(f.Name(), ".") {
 			continue
@@ -106,12 +137,12 @@ func loadFont(path string) ([]*fontSymbol, error) {
 		if err != nil {
 			return nil, err
 		}
-		fonts = append(fonts,fs)
+		fonts = append(fonts, fs)
 	}
 	return fonts, nil
 }
 
-func loadSymbol(path string, fileName string) (*fontSymbol, error) {
+func loadSymbol(path string, fileName string) (*FontSymbol, error) {
 	imageFile, err := os.Open(path + "/" + fileName)
 	if err != nil {
 		return nil, err
@@ -123,15 +154,16 @@ func loadSymbol(path string, fileName string) (*fontSymbol, error) {
 		return nil, err
 	}
 
-	symbolName, err := url.QueryUnescape(fileName)
+	nameWithoutExtension := strings.TrimSuffix(fileName, ".png")
+	symbolName, err := url.QueryUnescape(nameWithoutExtension)
 	if err != nil {
 		return nil, err
 	}
 
 	symbolName = strings.Replace(symbolName, "\u200b", "", -1) // Remove zero width spaces
-	fs := newFontSymbol(
-		strings.TrimSuffix(symbolName, ".png"),
-		ensureGrayScale(img),
+	fs := NewFontSymbol(
+		symbolName,
+		img,
 	)
 	return fs, nil
 }

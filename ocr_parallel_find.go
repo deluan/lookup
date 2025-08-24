@@ -6,7 +6,7 @@ import (
 )
 
 // Search for all symbols in the image in parallel. Uses a Fan-out/fan-in approach.
-func findAllInParallel(numWorkers int, symbols []*fontSymbol, img *imageBinary, threshold float64, rect image.Rectangle) ([]*fontSymbolLookup, error) {
+func findAllInParallel(numWorkers int, symbols []*FontSymbol, img *imageBinary, threshold float64, rect image.Rectangle) ([]*fontSymbolLookup, error) {
 	f := &parallelFinder{
 		numWorkers: max(numWorkers, 1),
 		symbols:    symbols,
@@ -21,7 +21,7 @@ type parallelFinder struct {
 	img        *imageBinary
 	threshold  float64
 	numWorkers int
-	symbols    []*fontSymbol
+	symbols    []*FontSymbol
 	rect       image.Rectangle
 }
 
@@ -30,8 +30,8 @@ type lookupResult struct {
 	err error
 }
 
-func (f *parallelFinder) prepare(done <-chan struct{}) <-chan *fontSymbol {
-	out := make(chan *fontSymbol)
+func (f *parallelFinder) prepare(done <-chan struct{}) <-chan *FontSymbol {
+	out := make(chan *FontSymbol)
 	go func() {
 		defer close(out)
 		for _, s := range f.symbols {
@@ -45,7 +45,7 @@ func (f *parallelFinder) prepare(done <-chan struct{}) <-chan *fontSymbol {
 	return out
 }
 
-func (f *parallelFinder) addWorker(done <-chan struct{}, in <-chan *fontSymbol) <-chan lookupResult {
+func (f *parallelFinder) addWorker(done <-chan struct{}, in <-chan *FontSymbol) <-chan lookupResult {
 	out := make(chan lookupResult)
 	go func() {
 		defer close(out)
